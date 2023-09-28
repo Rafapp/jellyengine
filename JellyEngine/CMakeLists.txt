@@ -1,10 +1,7 @@
-﻿# CMakeList.txt : CMake project for JellyEngine, include source and define
+# CMakeList.txt : CMake project for JellyEngine, include source and define
 # project specific logic here.
 #
-
 #Definitions
-
-
 cmake_minimum_required (VERSION 3.8)
 
 # Enable Hot Reload for MSVC compilers if supported.
@@ -27,11 +24,11 @@ add_executable (JellyEngine "JellyEngine.cpp" "JellyEngine.h")
 # USE THIS ON PRODUCTION
 target_compile_definitions("${CMAKE_PROJECT_NAME}" PUBLIC RESOURCES_PATH="./resources/") 
 
+# Add source to this project's executable.
+add_executable (JellyEngine "JellyEngine.cpp" "JellyEngine.h")
+
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET JellyEngine PROPERTY CXX_STANDARD 20)
 endif()
-
 target_link_libraries("${CMAKE_PROJECT_NAME}" PRIVATE assimp)
 
-
-# TODO: Add tests and install targets if needed.
