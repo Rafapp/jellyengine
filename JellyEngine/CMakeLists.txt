@@ -24,11 +24,8 @@ add_executable (JellyEngine "JellyEngine.cpp" "JellyEngine.h")
 # USE THIS ON PRODUCTION
 target_compile_definitions("${CMAKE_PROJECT_NAME}" PUBLIC RESOURCES_PATH="./resources/") 
 
-# Add source to this project's executable.
-add_executable (JellyEngine "JellyEngine.cpp" "JellyEngine.h")
-
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET JellyEngine PROPERTY CXX_STANDARD 20)
 endif()
-target_link_libraries("${CMAKE_PROJECT_NAME}" PRIVATE assimp)
 
+target_link_libraries("${CMAKE_PROJECT_NAME}" PRIVATE assimp)

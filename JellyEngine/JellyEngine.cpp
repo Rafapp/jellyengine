@@ -6,5 +6,5 @@ int main()
 {
 	cout << "Hello JellyEngine." << endl;
 	cout << RESOURCES_PATH << endl;
-  return 0;
+	return 0;
 }
