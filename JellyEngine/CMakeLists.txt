@@ -19,7 +19,7 @@ set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 set(GLFW_INSTALL OFF CACHE BOOL "" FORCE)
 
 # Add library subdirectories
-add_subdirectory("libraries/assimp")
+#add_subdirectory("libraries/assimp")
 add_subdirectory("libraries/glfw")
 
 # Add source to this project's executable.
@@ -38,4 +38,7 @@ endif()
 #Link libraries
 find_package(OpenGL REQUIRED)
 target_compile_definitions(${CMAKE_PROJECT_NAME} PUBLIC GLFW_DLL)
-target_link_libraries("${CMAKE_PROJECT_NAME}" PRIVATE assimp glfw OpenGL::GL)
+
+#target_link_libraries("${CMAKE_PROJECT_NAME}" PRIVATE assimp glfw OpenGL::GL)
+target_link_libraries("${CMAKE_PROJECT_NAME}" PRIVATE glfw OpenGL::GL)
+
