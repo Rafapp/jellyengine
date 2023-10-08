@@ -1,0 +1,9 @@
+libdir=C:/Users/ebreo/Documents/jellyengine/JellyEngine/out/install/x64-debug/lib
+includedir=C:/Users/ebreo/Documents/jellyengine/JellyEngine/out/install/x64-debug/include
+
+Name: JellyEngine
+Description: Import various well-known 3D model formats in an uniform manner.
+Version: 5.3.0
+Libs: -L${libdir} -lassimp
+Libs.private:  
+Cflags: -I${includedir}

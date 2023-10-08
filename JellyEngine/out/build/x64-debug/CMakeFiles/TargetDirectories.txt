@@ -1,0 +1,9 @@
+C:/Users/ebreo/Documents/jellyengine/JellyEngine/out/build/x64-debug/CMakeFiles/JellyEngine.dir
+C:/Users/ebreo/Documents/jellyengine/JellyEngine/out/build/x64-debug/CMakeFiles/edit_cache.dir
+C:/Users/ebreo/Documents/jellyengine/JellyEngine/out/build/x64-debug/CMakeFiles/rebuild_cache.dir
+C:/Users/ebreo/Documents/jellyengine/JellyEngine/out/build/x64-debug/libraries/glfw/CMakeFiles/edit_cache.dir
+C:/Users/ebreo/Documents/jellyengine/JellyEngine/out/build/x64-debug/libraries/glfw/CMakeFiles/rebuild_cache.dir
+C:/Users/ebreo/Documents/jellyengine/JellyEngine/out/build/x64-debug/libraries/glfw/src/CMakeFiles/update_mappings.dir
+C:/Users/ebreo/Documents/jellyengine/JellyEngine/out/build/x64-debug/libraries/glfw/src/CMakeFiles/glfw.dir
+C:/Users/ebreo/Documents/jellyengine/JellyEngine/out/build/x64-debug/libraries/glfw/src/CMakeFiles/edit_cache.dir
+C:/Users/ebreo/Documents/jellyengine/JellyEngine/out/build/x64-debug/libraries/glfw/src/CMakeFiles/rebuild_cache.dir
