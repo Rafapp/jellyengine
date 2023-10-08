@@ -38,5 +38,7 @@ endif()
 #Link libraries
 find_package(OpenGL REQUIRED)
 target_compile_definitions(${CMAKE_PROJECT_NAME} PUBLIC GLFW_DLL)
+
 #target_link_libraries("${CMAKE_PROJECT_NAME}" PRIVATE assimp glfw OpenGL::GL)
 target_link_libraries("${CMAKE_PROJECT_NAME}" PRIVATE glfw OpenGL::GL)
+
