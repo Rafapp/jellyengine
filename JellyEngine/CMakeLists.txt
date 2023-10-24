@@ -1,44 +1,46 @@
-# CMakeList.txt : CMake project for JellyEngine, include source and define
-# project specific logic here.
-#
-#Definitions
-cmake_minimum_required (VERSION 3.8)
-
-# Enable Hot Reload for MSVC compilers if supported.
-if (POLICY CMP0141)
-  cmake_policy(SET CMP0141 NEW)
-  set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<IF:$<AND:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>,$<$<CONFIG:Debug,RelWithDebInfo>:EditAndContinue>,$<$<CONFIG:Debug,RelWithDebInfo>:ProgramDatabase>>")
-endif()
+﻿cmake_minimum_required (VERSION 3.8)
 
 project ("JellyEngine")
 
-#Remove GLFW examples from build
+set(CMAKE_CXX_STANDARD_17)
+
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 set(GLFW_INSTALL OFF CACHE BOOL "" FORCE)
 
-# Add library subdirectories
-#add_subdirectory("libraries/assimp")
-add_subdirectory("libraries/glfw")
+add_subdirectory("libraries/glfw-3.3.8")			#window oppener
+#add_subdirectory(thirdparty/glad)				#opengl loader
 
-# Add source to this project's executable.
 add_executable (JellyEngine "JellyEngine.cpp" "JellyEngine.h")
 
-# USE THIS IF DEVELOPING
+# Add library names here
+target_link_libraries("${CMAKE_PROJECT_NAME}" PRIVATE glfw)
+
+# Header files
+target_include_directories("${CMAKE_PROJECT_NAME}" PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include/")
+
+# Define MY_SOURCES to be a list of all the source files for my game 
+file(GLOB_RECURSE MY_SOURCES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
+
+# Resources path: Developer mode (comment/uncomment)
 #target_compile_definitions("${CMAKE_PROJECT_NAME}" PUBLIC RESOURCES_PATH="${CMAKE_CURRENT_SOURCE_DIR}/resources/")
 
-# USE THIS ON PRODUCTION
-target_compile_definitions("${CMAKE_PROJECT_NAME}" PUBLIC RESOURCES_PATH="./resources/") 
+# Resources path: Shipping mode (comment/uncomment)
+target_compile_definitions("${CMAKE_PROJECT_NAME}" PUBLIC RESOURCES_PATH="./resources/") # Uncomment this line to setup the ASSETS_PATH macro to the final assets directory when you share the game
 
-if (CMAKE_VERSION VERSION_GREATER 3.12)
-  set_property(TARGET JellyEngine PROPERTY CXX_STANDARD 20)
+target_sources("${CMAKE_PROJECT_NAME}" PRIVATE ${MY_SOURCES} )
+
+
+if(MSVC) # If using the VS compiler...
+
+	target_compile_definitions("${CMAKE_PROJECT_NAME}" PUBLIC _CRT_SECURE_NO_WARNINGS)
+
+	#remove console
+	#set_target_properties("${CMAKE_PROJECT_NAME}" PROPERTIES LINK_FLAGS "/SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup")
+	
+	set_property(TARGET "${CMAKE_PROJECT_NAME}" PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreadedDebug<$<CONFIG:Debug>:Debug>")
+	set_property(TARGET "${CMAKE_PROJECT_NAME}" PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Release>:Release>")
+
 endif()
-
-#Link libraries
-find_package(OpenGL REQUIRED)
-target_compile_definitions(${CMAKE_PROJECT_NAME} PUBLIC GLFW_DLL)
-
-#target_link_libraries("${CMAKE_PROJECT_NAME}" PRIVATE assimp glfw OpenGL::GL)
-target_link_libraries("${CMAKE_PROJECT_NAME}" PRIVATE glfw OpenGL::GL)
 
