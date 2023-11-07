@@ -9,8 +9,6 @@
 
 using namespace std;
 
-GLint SCREEN_WIDTH = 1280, SCREEN_HEIGHT = 720;
-
 static const struct
 {
     float x, y;
@@ -62,6 +60,7 @@ int main()
     GLFWwindow* window;
     GLuint vertex_buffer, vertex_shader, fragment_shader, program;
     GLint mvp_location, vpos_location, vcol_location;
+    GLint wWidth = 1280, wHeight = 720;
 
     glfwSetErrorCallback(error_callback);
 
@@ -73,7 +72,7 @@ int main()
 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 
-    window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Jelly Engine", nullptr, nullptr);
+    window = glfwCreateWindow(wWidth, wHeight, "Jelly Engine", nullptr, nullptr);
 
     if (!window) {
         std::cerr << "Failed to create GLFW window" << std::endl;
@@ -124,13 +123,12 @@ int main()
     while (!glfwWindowShouldClose(window))
     {
         float ratio;
-        int width, height;
         glm::mat4 model, projection, mvp;
 
-        glfwGetFramebufferSize(window, &width, &height);
-        ratio = width / (float)height;
+        glfwGetFramebufferSize(window, &wWidth, &wHeight);
+        ratio = wWidth / (float)wHeight;
 
-        glViewport(0, 0, width, height);
+        glViewport(0, 0, wWidth, wHeight);
         glClear(GL_COLOR_BUFFER_BIT);
 
         model = glm::rotate(glm::mat4(1.0f), (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
