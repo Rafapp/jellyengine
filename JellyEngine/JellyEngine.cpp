@@ -1,6 +1,8 @@
 ﻿#include "JellyEngine.h"
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
+
 
 using namespace std;
 
@@ -47,11 +49,18 @@ int main()
         return -1;
     }
 
-    // Add our esc input to the glfw process
-    glfwSetKeyCallback(window, key_callback);
-
     // Assign a openGL context (Assign memory in OS for openGL computations)
     glfwMakeContextCurrent(window);
+
+    // Initialize GLAD
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+    {
+        std::cout << "Failed to initialize GLAD" << std::endl;
+        return -1;
+    }
+
+    // Add our esc input to the glfw process
+    glfwSetKeyCallback(window, key_callback);
 
     // Loop until the user closes the window
     while (!glfwWindowShouldClose(window)) {
