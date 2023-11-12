@@ -26,9 +26,11 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 
 int main()
 {
+    /*
+     * SET UP GLFW, GLAD AND OPENGL
+     */
     GLFWwindow* window;
     GLuint vertex_buffer, vertex_shader, fragment_shader, program;
-    GLint mvp_location, vpos_location, vcol_location;
     GLint wWidth = 1280, wHeight = 720;
 
     glfwSetErrorCallback(error_callback);
@@ -61,29 +63,20 @@ int main()
 
     glfwSetKeyCallback(window, key_callback);
 
-    // Vertices to draw
-    float vertices[] = {
-        -0.5f, -0.5f, 0.0f,
-         0.5f, -0.5f, 0.0f,
-         0.0f,  0.5f, 0.0f
-    };
-
-    // Create array buffer object
-    unsigned int VBO;
-    glGenBuffers(1, &VBO); // Create the buffer object with an ID
-    glBindBuffer(GL_ARRAY_BUFFER, VBO); // Bind to the buffer
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW); // Copy to currently defined buffer
-
     /*
-    * Vertex Shader
+    * VERTEX SHADER
     */
 
     // The shader as a string
-    const char* vertexShaderSource = "#version 330 core\n"
+    const char* vertexShaderSource = 
+        "#version 330 core\n"
         "layout (location = 0) in vec3 aPos;\n"
+        "layout (location = 1) in vec3 aColor;\n"
+        "out vec3 ourColor;\n"
         "void main()\n"
         "{\n"
-        "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+        "   gl_Position = vec4(aPos, 1.0);\n"
+        "   ourColor = aColor;\n"
         "}\0";
 
     // Create the vertex shader object
@@ -93,16 +86,17 @@ int main()
     glCompileShader(vertexShader);
 
     /*
-     * Fragment shader
+     * FRAGMENT SHADER
      */
 
     // Shader as a string
     const char* fragmentShaderSource =
         "#version 330 core\n"
         "out vec4 FragColor;\n"
+        "in vec3 ourColor;\n"
         "void main()\n"
         "{\n"
-        "FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
+        "   FragColor = vec4(ourColor, 1.0);\n"
          "}\0";
 
     // Create fragment shader object
@@ -112,21 +106,63 @@ int main()
     glCompileShader(fragmentShader);
 
     /*
-     * GL Program, has vertex and fragment shaders 
+     * GL PROGRAM (set up vertex and fragment shaders)
      */
+
     unsigned int shaderProgram;
     shaderProgram = glCreateProgram();
     glAttachShader(shaderProgram, vertexShader);
     glAttachShader(shaderProgram, fragmentShader);
     glLinkProgram(shaderProgram);
 
+
     // Clean up shaders ( not needed anymore after program is prepared )
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
 
-    // Tell openGL how to interpret our vertex data
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    /*
+     * BUFFERS
+     */
+
+     // Vertices to draw, we use the indexed triangle data structure
+    float vertices[] = {
+        // positions         // colors
+         0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,   // bottom right
+        -0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,   // bottom left
+         0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f    // top 
+    };
+    unsigned int indices[] = {  // note that we start from 0!
+        0, 1, 2   // first triangle
+    };
+
+     // Create array buffer object
+    unsigned int VBO;
+    glGenBuffers(1, &VBO); // Create the buffer object with an ID
+    glBindBuffer(GL_ARRAY_BUFFER, VBO); // Bind to the buffer
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW); // Copy to currently defined buffer
+
+    // Creating a vertex array object (which is like a vbo, but natively calls glVertexAttribPointer, and glEnableVertexAttribArray)
+    unsigned int VAO;
+    glGenVertexArrays(1, &VAO);
+    glBindVertexArray(VAO);
+
+
+    // Create an element buffer object (use the indexed triangle data structure)
+    unsigned int EBO;
+    glGenBuffers(1, &EBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+    // Specify data format, and location of first VERTEX (location = 0 in the vertex shader)
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
+
+    // Specify data format, and location of first COLOR (location = 1 in the vertex shader) with a stride of 3
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+
+    // Draw wireframe
+    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); 
 
     // Render loop
     while (!glfwWindowShouldClose(window))
@@ -136,8 +172,18 @@ int main()
         glfwGetFramebufferSize(window, &wWidth, &wHeight);
         ratio = wWidth / (float)wHeight;
 
-        glViewport(0, 0, wWidth, wHeight);
+        glViewport(0, 0, wWidth, wHeight); // TODO: This stretches things, we need to adjust the projection matrix
+
+        // BG Color
+        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
+
+        // Activate shader
+        glUseProgram(shaderProgram);
+
+        // Render the triangles
+        glBindVertexArray(VAO);
+        glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
