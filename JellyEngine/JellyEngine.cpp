@@ -127,12 +127,14 @@ int main()
      // Vertices to draw, we use the indexed triangle data structure
     float vertices[] = {
         // positions         // colors
-         0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,   // bottom right
-        -0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,   // bottom left
-         0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f    // top 
+        -0.5f, 0.0f, 0.0f,  1.0f, 0.0f, 0.0f,
+        -0.5f, 0.5f, 0.0f,  0.0f, 1.0f, 0.0f,
+         0.5f,  0.0f, 0.0f,  0.0f, 0.0f, 1.0f,
+         0.5f,  0.5f, 0.0f,  1.0f, 0.0f, 0.0f
     };
     unsigned int indices[] = {  // note that we start from 0!
-        0, 1, 2   // first triangle
+        0, 1, 2,   // first triangle
+        2, 3, 1   // second triangle
     };
 
      // Create array buffer object
@@ -183,7 +185,7 @@ int main()
 
         // Render the triangles
         glBindVertexArray(VAO);
-        glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
