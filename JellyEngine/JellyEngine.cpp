@@ -1,4 +1,8 @@
-﻿#include "JellyEngine.h"
+﻿// Our code
+#include "JellyEngine.h"
+#include "shader.h"
+
+// Libraries
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -29,6 +33,11 @@ int main()
     /*
      * SET UP GLFW, GLAD AND OPENGL
      */
+
+    cout << "JELLY ENGINE: VERSION 1.0.0" << endl;
+    cout << "Starting up ..." << endl;
+    cout << endl;
+
     GLFWwindow* window;
     GLuint vertex_buffer, vertex_shader, fragment_shader, program;
     GLint wWidth = 1280, wHeight = 720;
@@ -64,61 +73,9 @@ int main()
     glfwSetKeyCallback(window, key_callback);
 
     /*
-    * VERTEX SHADER
-    */
-
-    // The shader as a string
-    const char* vertexShaderSource = 
-        "#version 330 core\n"
-        "layout (location = 0) in vec3 aPos;\n"
-        "layout (location = 1) in vec3 aColor;\n"
-        "out vec3 ourColor;\n"
-        "void main()\n"
-        "{\n"
-        "   gl_Position = vec4(aPos, 1.0);\n"
-        "   ourColor = aColor;\n"
-        "}\0";
-
-    // Create the vertex shader object
-    unsigned int vertexShader;
-    vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
-    glCompileShader(vertexShader);
-
-    /*
-     * FRAGMENT SHADER
+     * Shaders
      */
-
-    // Shader as a string
-    const char* fragmentShaderSource =
-        "#version 330 core\n"
-        "out vec4 FragColor;\n"
-        "in vec3 ourColor;\n"
-        "void main()\n"
-        "{\n"
-        "   FragColor = vec4(ourColor, 1.0);\n"
-         "}\0";
-
-    // Create fragment shader object
-    unsigned int fragmentShader;
-    fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
-    glCompileShader(fragmentShader);
-
-    /*
-     * GL PROGRAM (set up vertex and fragment shaders)
-     */
-
-    unsigned int shaderProgram;
-    shaderProgram = glCreateProgram();
-    glAttachShader(shaderProgram, vertexShader);
-    glAttachShader(shaderProgram, fragmentShader);
-    glLinkProgram(shaderProgram);
-
-
-    // Clean up shaders ( not needed anymore after program is prepared )
-    glDeleteShader(vertexShader);
-    glDeleteShader(fragmentShader);
+    Shader shader(RESOURCES_PATH "shaders/shader.vert", RESOURCES_PATH "shaders/shader.frag");
 
     /*
      * BUFFERS
@@ -166,6 +123,19 @@ int main()
     // Draw wireframe
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); 
 
+    /*
+     * CAMERA 
+     */
+     
+    // View matrix
+    glm::mat4 view = glm::mat4(1.0f);
+    view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f)); // Camera's position
+
+    // Projection matrix
+    glm::mat4 projection;
+    projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+
+
     // Render loop
     while (!glfwWindowShouldClose(window))
     {
@@ -181,7 +151,7 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT);
 
         // Activate shader
-        glUseProgram(shaderProgram);
+        shader.use();
 
         // Render the triangles
         glBindVertexArray(VAO);
