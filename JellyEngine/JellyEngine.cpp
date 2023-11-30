@@ -1,6 +1,7 @@
 ﻿// Our code
 #include "JellyEngine.h"
 #include "shader.h"
+#include "camera.h"
 
 // Libraries
 #include <glad/glad.h>
@@ -10,22 +11,48 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 
-
 using namespace std;
+
+// Functions
+void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
+void processInput(GLFWwindow* window);
+
+// Delta time
+float deltaTime = 0.0f;	// Time between current frame and last frame
+float lastFrame = 0.0f; // Time of last frame
+
+// Settings
+int wWidth = 1280;
+int wHeight = 720;
+
+// Camera 
+Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
+float lastX = wWidth / 2.0f;
+float lastY = wHeight / 2.0f;
+bool firstMouse = true;
+
+// Checks for key input
+void processInput(GLFWwindow* window)
+{
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+        glfwSetWindowShouldClose(window, true);
+
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+        camera.ProcessKeyboard(FORWARD, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+        camera.ProcessKeyboard(BACKWARD, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+        camera.ProcessKeyboard(LEFT, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+        camera.ProcessKeyboard(RIGHT, deltaTime);
+}
 
 // Callbacks a glfw error
 static void error_callback(int error, const char* description)
 {
     fprintf(stderr, "Error: %s\n", description);
-}
-
-// Checks for key input
-static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
-{
-    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
-        cout << "ESC has been pressed." << endl;
-        glfwSetWindowShouldClose(window, GLFW_TRUE);
-    }
 }
 
 int main()
@@ -40,7 +67,6 @@ int main()
 
     GLFWwindow* window;
     GLuint vertex_buffer, vertex_shader, fragment_shader, program;
-    GLint wWidth = 1280, wHeight = 720;
 
     glfwSetErrorCallback(error_callback);
 
@@ -61,6 +87,9 @@ int main()
     }
 
     glfwMakeContextCurrent(window);
+    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+    glfwSetCursorPosCallback(window, mouse_callback);
+    glfwSetScrollCallback(window, scroll_callback);
 
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
@@ -70,8 +99,6 @@ int main()
 
     glfwSwapInterval(1);
 
-    glfwSetKeyCallback(window, key_callback);
-
     /*
      * Shaders
      */
@@ -80,6 +107,9 @@ int main()
     /*
      * BUFFERS: Todo ~ Make mesh class
      */
+
+     // Enable z-depth buffer
+     glEnable(GL_DEPTH_TEST);
 
      // Vertices to draw, we use the indexed triangle data structure
     float vertices[] = {
@@ -126,34 +156,18 @@ int main()
      * MODEL: Todo ~ Make a model class 
      */
     glm::mat4 model = glm::mat4(1.0f);
-    
-
-    /*
-     * CAMERA: Todo ~ Make camera class
-     */
-
-    // Camera attributes
-    glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
-    glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, 0.0f);
-    glm::vec3 cameraDirection = glm::normalize(cameraPos - cameraTarget);
-    glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
-    glm::vec3 cameraRight = glm::normalize(glm::cross(up, cameraDirection));
-    glm::vec3 cameraUp = glm::cross(cameraDirection, cameraRight);
-
-    // View matrix
-    glm::mat4 projection;
-    glm::mat4 proj = glm::perspective(glm::radians(45.0f), (float)wWidth / (float)wHeight, 0.1f, 100.0f);
-
-    // LookAt matrix
-    glm::mat4 view;
-    view = glm::lookAt(cameraPos, cameraTarget, up);
-
-    // For fun, we can orbit the camera around!
-    const float orbitRadius = 10;
 
     // Render loop
     while (!glfwWindowShouldClose(window))
     {
+        // Update delta time
+        float currentFrame = glfwGetTime();
+        deltaTime = currentFrame - lastFrame;
+        lastFrame = currentFrame;
+
+        // Input
+        processInput(window);
+
         float ratio;
 
         glfwGetFramebufferSize(window, &wWidth, &wHeight);
@@ -161,15 +175,20 @@ int main()
 
         glViewport(0, 0, wWidth, wHeight); // TODO: This stretches things, we need to adjust the projection matrix
 
-        // BG Color
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        // BG and clearing buffers
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        // Rotate camera
-        float camX = sin(glfwGetTime()) * orbitRadius;
-        float camZ = cos(glfwGetTime()) * orbitRadius;
-        cameraPos = glm::vec3(camX, 0.0, camZ);
-        model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f) * 0.001f, glm::vec3(0.5f, 1.0f, 0.5f));
+        // Activate shader
+        shader.use();
+
+        // Projection matrix
+        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)wWidth / (float)wHeight, 0.1f, 100.0f);
+
+        // View matrix
+        glm::mat4 view = camera.GetViewMatrix();
+
         // Apply matrix transformations in shader
         int modelLoc = glGetUniformLocation(shader.ID, "model");
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
@@ -179,9 +198,6 @@ int main()
 
         int projectionLoc = glGetUniformLocation(shader.ID, "projection");
         glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
-
-        // Activate shader
-        shader.use();
 
         // Render the triangles
         glBindVertexArray(VAO);
@@ -196,4 +212,44 @@ int main()
     glfwTerminate();
     exit(EXIT_SUCCESS);
 
+}
+
+// glfw: whenever the window size changed (by OS or user resize) this callback function executes
+// ---------------------------------------------------------------------------------------------
+void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+{
+    // make sure the viewport matches the new window dimensions; note that width and 
+    // height will be significantly larger than specified on retina displays.
+    glViewport(0, 0, width, height);
+}
+
+
+// glfw: whenever the mouse moves, this callback is called
+// -------------------------------------------------------
+void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
+{
+    float xpos = static_cast<float>(xposIn);
+    float ypos = static_cast<float>(yposIn);
+
+    if (firstMouse)
+    {
+        lastX = xpos;
+        lastY = ypos;
+        firstMouse = false;
+    }
+
+    float xoffset = xpos - lastX;
+    float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
+
+    lastX = xpos;
+    lastY = ypos;
+
+    camera.ProcessMouseMovement(xoffset, yoffset);
+}
+
+// glfw: whenever the mouse scroll wheel scrolls, this callback is called
+// ----------------------------------------------------------------------
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+{
+    camera.ProcessMouseScroll(static_cast<float>(yoffset));
 }
