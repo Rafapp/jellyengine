@@ -6,21 +6,21 @@
 
 #include <glad/glad.h>
 #include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #include <renderer.h>
 #include <camera.h>
-#include <renderer.h>
 #include <shader.h>
 
 using namespace std;
 
-Renderer::setup() {
+void Renderer::setup(float wWidth, float wHeight) {
     /*
      * SETUP
      */
 
 	// Set up camera
-	camera = new Camera(glm::vec3(0.0f, 0.0f, 3.0f));
+	camera = new Camera();
 	float lastX = wWidth / 2.0f;
 	float lastY = wHeight / 2.0f;
 
@@ -82,10 +82,10 @@ Renderer::setup() {
     /*
      * MODEL: Todo ~ Make a model class
      */
-    glm::mat4 model = glm::mat4(1.0f);
+    model = glm::mat4(1.0f);
 }
 
-void Renderer::draw() {
+void Renderer::draw(float wWidth, float wHeight) {
     glViewport(0, 0, wWidth, wHeight); // TODO: This stretches things, we need to adjust the projection matrix
 
     // BG and clearing buffers
@@ -94,22 +94,22 @@ void Renderer::draw() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // Activate shader
-    renderer.mainShader.use();
+    renderer.mainShader->use();
 
     // Projection matrix
-    glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)wWidth / (float)wHeight, 0.1f, 100.0f);
+    glm::mat4 projection = glm::perspective(glm::radians(camera->Zoom), (float)wWidth / (float)wHeight, 0.1f, 100.0f);
 
     // View matrix
-    glm::mat4 view = camera.GetViewMatrix();
+    glm::mat4 view = camera->GetViewMatrix();
 
     // Apply matrix transformations in shader
-    int modelLoc = glGetUniformLocation(shader.ID, "model");
+    int modelLoc = glGetUniformLocation(mainShader->ID, "model");
     glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 
-    int viewLoc = glGetUniformLocation(shader.ID, "view");
+    int viewLoc = glGetUniformLocation(mainShader->ID, "view");
     glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
 
-    int projectionLoc = glGetUniformLocation(shader.ID, "projection");
+    int projectionLoc = glGetUniformLocation(mainShader->ID, "projection");
     glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
 
     // Render the triangles

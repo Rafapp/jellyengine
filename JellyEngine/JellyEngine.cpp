@@ -97,7 +97,7 @@ int main()
     glfwSwapInterval(1);
 
     // Set up renderer
-    renderer.setup();
+    renderer.setup(wWidth, wHeight);
 
     // Runtime loop
     while (!glfwWindowShouldClose(window))
@@ -112,7 +112,7 @@ int main()
 
         glfwGetFramebufferSize(window, &wWidth, &wHeight);
 
-        renderer.draw();
+        renderer.draw(wWidth, wHeight);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
@@ -125,18 +125,11 @@ int main()
 
 }
 
-// glfw: whenever the window size changed (by OS or user resize) this callback function executes
-// ---------------------------------------------------------------------------------------------
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
-    // make sure the viewport matches the new window dimensions; note that width and 
-    // height will be significantly larger than specified on retina displays.
     glViewport(0, 0, width, height);
 }
 
-
-// glfw: whenever the mouse moves, this callback is called
-// -------------------------------------------------------
 void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 {
     float xpos = static_cast<float>(xposIn);
@@ -158,8 +151,6 @@ void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
     renderer.camera->ProcessMouseMovement(xoffset, yoffset);
 }
 
-// glfw: whenever the mouse scroll wheel scrolls, this callback is called
-// ----------------------------------------------------------------------
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
     renderer.camera->ProcessMouseScroll(static_cast<float>(yoffset));

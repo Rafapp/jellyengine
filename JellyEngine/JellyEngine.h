@@ -1,5 +1,3 @@
-﻿class JellyEngine {
-	void setup();
-	void update();
-	void draw();
-};
+﻿#include <renderer.h>
+
+Renderer renderer;
