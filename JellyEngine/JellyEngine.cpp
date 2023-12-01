@@ -1,18 +1,3 @@
-<<<<<<< Updated upstream
-﻿// Our code
-#include "JellyEngine.h"
-#include "shader.h"
-#include "camera.h"
-
-// Libraries
-#include <glad/glad.h>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-#include <GLFW/glfw3.h>
-#include <iostream>
-
-=======
 /*
  * JELLYENGINE: Window, OS and runtime management (glfw). 
  */
@@ -26,7 +11,6 @@
 #include <renderer.h>
 #include "JellyEngine.h"
 
->>>>>>> Stashed changes
 using namespace std;
 
 // Functions
