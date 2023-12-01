@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 ﻿// Our code
 #include "JellyEngine.h"
 #include "shader.h"
@@ -11,6 +12,21 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 
+=======
+/*
+ * JELLYENGINE: Window, OS and runtime management (glfw). 
+ */
+
+#include <iostream>
+
+#include <glm/glm.hpp>
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+
+#include <renderer.h>
+#include "JellyEngine.h"
+
+>>>>>>> Stashed changes
 using namespace std;
 
 // Functions
@@ -28,9 +44,6 @@ int wWidth = 1280;
 int wHeight = 720;
 
 // Camera 
-Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
-float lastX = wWidth / 2.0f;
-float lastY = wHeight / 2.0f;
 bool firstMouse = true;
 
 // Checks for key input
@@ -40,13 +53,13 @@ void processInput(GLFWwindow* window)
         glfwSetWindowShouldClose(window, true);
 
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-        camera.ProcessKeyboard(FORWARD, deltaTime);
+        renderer.camera->ProcessKeyboard(FORWARD, deltaTime);
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-        camera.ProcessKeyboard(BACKWARD, deltaTime);
+        renderer.camera->ProcessKeyboard(BACKWARD, deltaTime);
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-        camera.ProcessKeyboard(LEFT, deltaTime);
+        renderer.camera->ProcessKeyboard(LEFT, deltaTime);
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-        camera.ProcessKeyboard(RIGHT, deltaTime);
+        renderer.camera->ProcessKeyboard(RIGHT, deltaTime);
 }
 
 // Callbacks a glfw error
@@ -99,65 +112,10 @@ int main()
 
     glfwSwapInterval(1);
 
-    /*
-     * Shaders
-     */
-    Shader shader(RESOURCES_PATH "shaders/shader.vert", RESOURCES_PATH "shaders/shader.frag");
+    // Set up renderer
+    renderer.setup();
 
-    /*
-     * BUFFERS: Todo ~ Make mesh class
-     */
-
-     // Enable z-depth buffer
-     glEnable(GL_DEPTH_TEST);
-
-     // Vertices to draw, we use the indexed triangle data structure
-    float vertices[] = {
-        // positions         // colors
-        -0.5f, 0.0f, 0.0f,  1.0f, 0.0f, 0.0f,
-        -0.5f, 0.5f, 0.0f,  0.0f, 1.0f, 0.0f,
-         0.5f,  0.0f, 0.0f,  0.0f, 0.0f, 1.0f,
-         0.5f,  0.5f, 0.0f,  1.0f, 0.0f, 0.0f
-    };
-    unsigned int indices[] = {  // note that we start from 0!
-        0, 1, 2,   // first triangle
-        2, 3, 1   // second triangle
-    };
-
-     // Create array buffer object
-    unsigned int VBO;
-    glGenBuffers(1, &VBO); // Create the buffer object with an ID
-    glBindBuffer(GL_ARRAY_BUFFER, VBO); // Bind to the buffer
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW); // Copy to currently defined buffer
-
-    // Creating a vertex array object (which is like a vbo, but natively calls glVertexAttribPointer, and glEnableVertexAttribArray)
-    unsigned int VAO;
-    glGenVertexArrays(1, &VAO);
-    glBindVertexArray(VAO);
-
-    // Create an element buffer object (use the indexed triangle data structure)
-    unsigned int EBO;
-    glGenBuffers(1, &EBO);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-    // Specify data format, and location of first VERTEX (location = 0 in the vertex shader)
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-
-    // Specify data format, and location of first COLOR (location = 1 in the vertex shader) with a stride of 3
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-
-    // Draw wireframe
-    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); 
-
-    /*
-     * MODEL: Todo ~ Make a model class 
-     */
-    glm::mat4 model = glm::mat4(1.0f);
-
-    // Render loop
+    // Runtime loop
     while (!glfwWindowShouldClose(window))
     {
         // Update delta time
@@ -168,40 +126,9 @@ int main()
         // Input
         processInput(window);
 
-        float ratio;
-
         glfwGetFramebufferSize(window, &wWidth, &wHeight);
-        ratio = wWidth / (float)wHeight;
 
-        glViewport(0, 0, wWidth, wHeight); // TODO: This stretches things, we need to adjust the projection matrix
-
-        // BG and clearing buffers
-        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        // Activate shader
-        shader.use();
-
-        // Projection matrix
-        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)wWidth / (float)wHeight, 0.1f, 100.0f);
-
-        // View matrix
-        glm::mat4 view = camera.GetViewMatrix();
-
-        // Apply matrix transformations in shader
-        int modelLoc = glGetUniformLocation(shader.ID, "model");
-        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-
-        int viewLoc = glGetUniformLocation(shader.ID, "view");
-        glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-
-        int projectionLoc = glGetUniformLocation(shader.ID, "projection");
-        glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
-
-        // Render the triangles
-        glBindVertexArray(VAO);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        renderer.draw();
 
         glfwSwapBuffers(window);
         glfwPollEvents();
@@ -233,23 +160,23 @@ void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 
     if (firstMouse)
     {
-        lastX = xpos;
-        lastY = ypos;
+        renderer.camera->lastX = xpos;
+        renderer.camera->lastY = ypos;
         firstMouse = false;
     }
 
-    float xoffset = xpos - lastX;
-    float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
+    float xoffset = xpos - renderer.camera->lastX;
+    float yoffset = renderer.camera->lastY - ypos; // reversed since y-coordinates go from bottom to top
 
-    lastX = xpos;
-    lastY = ypos;
+    renderer.camera->lastX = xpos;
+    renderer.camera->lastY = ypos;
 
-    camera.ProcessMouseMovement(xoffset, yoffset);
+    renderer.camera->ProcessMouseMovement(xoffset, yoffset);
 }
 
 // glfw: whenever the mouse scroll wheel scrolls, this callback is called
 // ----------------------------------------------------------------------
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
-    camera.ProcessMouseScroll(static_cast<float>(yoffset));
+    renderer.camera->ProcessMouseScroll(static_cast<float>(yoffset));
 }
