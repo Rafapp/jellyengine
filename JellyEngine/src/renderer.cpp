@@ -9,8 +9,6 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include <renderer.h>
-#include <camera.h>
-#include <shader.h>
 
 using namespace std;
 
@@ -58,7 +56,6 @@ void Renderer::setup(float wWidth, float wHeight) {
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW); // Copy to currently defined buffer
 
     // Creating a vertex array object (which is like a vbo, but natively calls glVertexAttribPointer, and glEnableVertexAttribArray)
-    unsigned int VAO;
     glGenVertexArrays(1, &VAO);
     glBindVertexArray(VAO);
 
@@ -83,6 +80,10 @@ void Renderer::setup(float wWidth, float wHeight) {
      * MODEL: Todo ~ Make a model class
      */
     model = glm::mat4(1.0f);
+
+    mainShader->use();
+
+    cout << "COMPLETE::RENDERER SETUP" << endl;
 }
 
 void Renderer::draw(float wWidth, float wHeight) {
@@ -92,9 +93,6 @@ void Renderer::draw(float wWidth, float wHeight) {
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    // Activate shader
-    renderer.mainShader->use();
 
     // Projection matrix
     glm::mat4 projection = glm::perspective(glm::radians(camera->Zoom), (float)wWidth / (float)wHeight, 0.1f, 100.0f);

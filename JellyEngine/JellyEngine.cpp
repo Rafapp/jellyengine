@@ -1,4 +1,4 @@
-/*
+﻿/*
  * JELLYENGINE: Window, OS and runtime management (glfw). 
  */
 
@@ -52,17 +52,14 @@ static void error_callback(int error, const char* description)
     fprintf(stderr, "Error: %s\n", description);
 }
 
-int main()
-{
-    /*
-     * SET UP GLFW, GLAD AND OPENGL: Todo ~ Make renderer class
-     */
-
+/*
+ * SET UP GLFW, GLAD AND OPENGL
+ */
+int setup() {
     cout << "JELLY ENGINE: VERSION 1.0.0" << endl;
     cout << "Starting up ..." << endl;
     cout << endl;
-
-    GLFWwindow* window;
+    
     GLuint vertex_buffer, vertex_shader, fragment_shader, program;
 
     glfwSetErrorCallback(error_callback);
@@ -87,6 +84,8 @@ int main()
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     glfwSetCursorPosCallback(window, mouse_callback);
     glfwSetScrollCallback(window, scroll_callback);
+    
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
@@ -98,6 +97,13 @@ int main()
 
     // Set up renderer
     renderer.setup(wWidth, wHeight);
+
+    cout << "COMPLETE::JELLY ENGINE SETUP" << endl;
+}
+
+int main()
+{
+    setup();
 
     // Runtime loop
     while (!glfwWindowShouldClose(window))

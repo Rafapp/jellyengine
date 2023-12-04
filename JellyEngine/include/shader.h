@@ -1,6 +1,6 @@
 // Resource: https://learnopengl.com/Getting-started/Shaders
-#ifndef SHADER_H
-#define SHADER_H
+
+#pragma once
 
 #include <string>
 #include <fstream>
@@ -24,5 +24,3 @@ public:
     void setInt(const std::string& name, int value) const;
     void setFloat(const std::string& name, float value) const;
 };
-
-#endif

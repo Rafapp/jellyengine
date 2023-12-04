@@ -1,3 +1,5 @@
+#pragma once
+
 /*
  * RENDERER: Takes care of OpenGL rendering backend
  */

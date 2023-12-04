@@ -1,5 +1,4 @@
-#ifndef CAMERA_H
-#define CAMERA_H
+#pragma once
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -56,4 +55,3 @@ private:
     // calculates the front vector from the Camera's (updated) Euler Angles
     void updateCameraVectors();
 };
-#endif
