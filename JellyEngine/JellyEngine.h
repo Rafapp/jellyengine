@@ -4,9 +4,9 @@
 #include <GLFW/glfw3.h>
 
 Renderer renderer;
-GLFWwindow* window;
+GLFWwindow* window; // TODO: Same
 
 int setup();
 void update();
-
+void exit();
 

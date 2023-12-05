@@ -77,9 +77,11 @@ void Renderer::setup(float wWidth, float wHeight) {
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); 
 
     /*
-     * MODEL: Todo ~ Make a model class
+     * MODEL
      */
-    model = glm::mat4(1.0f);
+    translate = glm::mat4(1.0f);
+    model = new Model(RESOURCES_PATH "3D/dragon.obj");
+    cout << "COMPLETE::MODEL LOADED" << endl;
 
     mainShader->use();
 
@@ -102,7 +104,7 @@ void Renderer::draw(float wWidth, float wHeight) {
 
     // Apply matrix transformations in shader
     int modelLoc = glGetUniformLocation(mainShader->ID, "model");
-    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(translate));
 
     int viewLoc = glGetUniformLocation(mainShader->ID, "view");
     glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
@@ -110,7 +112,6 @@ void Renderer::draw(float wWidth, float wHeight) {
     int projectionLoc = glGetUniformLocation(mainShader->ID, "projection");
     glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
 
-    // Render the triangles
-    glBindVertexArray(VAO);
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+    // Draw the model
+    model->draw(*mainShader);
 }

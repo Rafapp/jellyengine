@@ -6,6 +6,7 @@
 
 #include <camera.h>
 #include <shader.h>
+#include <model.h>
 
 using namespace std;
 
@@ -17,6 +18,8 @@ public:
 	Camera* camera;
 	Shader* mainShader;
 
-	glm::mat4 model;
+	glm::mat4 translate;
 	unsigned int VAO; // TODO: This has to go, classes need to be abstracted, but we can test with it for now
+
+	Model* model;
 };

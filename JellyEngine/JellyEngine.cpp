@@ -44,6 +44,8 @@ void processInput(GLFWwindow* window)
         renderer.camera->ProcessKeyboard(LEFT, deltaTime);
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         renderer.camera->ProcessKeyboard(RIGHT, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS)
+        renderer.camera->ResetPosition();
 }
 
 // Callbacks a glfw error
@@ -101,6 +103,36 @@ int setup() {
     cout << "COMPLETE::JELLY ENGINE SETUP" << endl;
 }
 
+/*
+ * UPDATE
+ */
+void update() {
+    // Update delta time
+    float currentFrame = glfwGetTime();
+    deltaTime = currentFrame - lastFrame;
+    lastFrame = currentFrame;
+
+    // Input
+    processInput(window);
+
+    glfwGetFramebufferSize(window, &wWidth, &wHeight);
+
+    renderer.draw(wWidth, wHeight);
+
+    glfwSwapBuffers(window);
+    glfwPollEvents();
+}
+
+/*
+ * EXIT
+ */
+void exit() {
+    glfwDestroyWindow(window);
+    glfwTerminate();
+    exit(EXIT_SUCCESS);
+    cout << "EXIT::JELLY ENGINE QUIT" << endl;
+}
+
 int main()
 {
     setup();
@@ -108,26 +140,10 @@ int main()
     // Runtime loop
     while (!glfwWindowShouldClose(window))
     {
-        // Update delta time
-        float currentFrame = glfwGetTime();
-        deltaTime = currentFrame - lastFrame;
-        lastFrame = currentFrame;
-
-        // Input
-        processInput(window);
-
-        glfwGetFramebufferSize(window, &wWidth, &wHeight);
-
-        renderer.draw(wWidth, wHeight);
-
-        glfwSwapBuffers(window);
-        glfwPollEvents();
+        update();
     }
 
-    glfwDestroyWindow(window);
-
-    glfwTerminate();
-    exit(EXIT_SUCCESS);
+    exit();
 
 }
 

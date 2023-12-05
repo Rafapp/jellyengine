@@ -1,5 +1,4 @@
-#ifndef PHYSICS_H
-#define PHYSICS_H
+#pragma once
 
 #include <glad/glad.h>
 #include <glm/glm.hpp>
@@ -117,5 +116,3 @@ struct PhysicsObject {
     }
 
 };
-
-#endif
