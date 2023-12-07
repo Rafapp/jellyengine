@@ -19,7 +19,7 @@ Camera::Camera() {
 
 	// Control values
 	Front = glm::vec3(0.0f, 0.0f, -1.0f);
-	MovementSpeed = 2.5f;
+	MovementSpeed = 1.5f;
 	MouseSensitivity = 0.05f;
 	Zoom = 45.0f;
 

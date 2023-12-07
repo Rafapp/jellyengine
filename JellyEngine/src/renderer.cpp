@@ -49,7 +49,7 @@ void Renderer::setup(float wWidth, float wHeight) {
     glm::mat4 lS = glm::scale(lightTransform, glm::vec3(0.25f, 0.25f, 0.25f));
     lightTransform = lT * lR * lS;
 
-    model = new Model(RESOURCES_PATH "3D/gummybear.fbx");
+    model = new Model(RESOURCES_PATH "3D/dragon.obj");
     cout << "COMPLETE::MODEL LOADED" << endl;
 
     light = new Model(RESOURCES_PATH "3D/cube.obj");
@@ -69,12 +69,11 @@ void Renderer::setup(float wWidth, float wHeight) {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-
     cout << "COMPLETE::RENDERER SETUP" << endl;
 }
 
 void Renderer::draw(float wWidth, float wHeight) {
-    glViewport(0, 0, wWidth, wHeight); // TODO: This stretches things, we need to adjust the projection matrix
+    glViewport(0, 0, wWidth, wHeight);
 
     // BG and clearing buffers
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -87,34 +86,43 @@ void Renderer::draw(float wWidth, float wHeight) {
     // View matrix
     glm::mat4 view = camera->GetViewMatrix();
 
-    // Model uniforms
-    int modelLoc = glGetUniformLocation(mainShader->ID, "model");
-    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelTransform));
-
+    // Uniforms
+    int transformLoc = glGetUniformLocation(mainShader->ID, "transform");
     int modelViewLoc = glGetUniformLocation(mainShader->ID, "view");
-    glUniformMatrix4fv(modelViewLoc, 1, GL_FALSE, glm::value_ptr(view));
-
+    int modelViewPosLoc = glGetUniformLocation(mainShader->ID, "viewPos");
     int modelProjectionLoc = glGetUniformLocation(mainShader->ID, "projection");
-    glUniformMatrix4fv(modelProjectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
-
-    // Draw the model with its color
-    int colorLoc = glGetUniformLocation(mainShader->ID, "color");
-    glUniform3f(colorLoc, modelColor.x, modelColor.y, modelColor.z);
-
     int boolLoc = glGetUniformLocation(mainShader->ID, "calculateLighting");
-    glUniform1i(boolLoc, 1);
-    model->draw(*mainShader);
+    int colorLoc = glGetUniformLocation(mainShader->ID, "color");
 
-    // Update light translate
-    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(lightTransform));
+    // Update light translate, send to uniform
+    lightTransform = glm::mat4(1.0f);
 
-    // Draw the light with its color and no lighting calculations. 
+    glm::mat4 lT = glm::translate(lightTransform, lightPos);
+    glm::mat4 lR = glm::rotate(lightTransform, glm::radians(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+    glm::mat4 lS = glm::scale(lightTransform, glm::vec3(0.125f, 0.125f, 0.125f));
+
+    lightTransform = lT * lR * lS;
+
+    glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(lightTransform));
+
+    // Update light color, enable rendering calculations 
     glUniform3f(colorLoc, lightColor.x, lightColor.y, lightColor.z);
     glUniform1i(boolLoc, 0);
 
     int lightPosLoc = glGetUniformLocation(mainShader->ID, "lightPos");
     glUniform3f(lightPosLoc, lightPos.x, lightPos.y, lightPos.z);// Set light position.
-    
     light->draw(*mainShader);
-    
+
+    // Set object's transforms
+    glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(modelTransform));
+    glUniformMatrix4fv(modelViewLoc, 1, GL_FALSE, glm::value_ptr(view));
+    glUniformMatrix4fv(modelProjectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
+
+    // Set object's color and view position for phong, enable rendering calculations
+    glUniform3f(colorLoc, modelColor.x, modelColor.y, modelColor.z);
+    glUniform3f(modelViewPosLoc, camera->Position.x, camera->Position.y, camera->Position.z);
+    glUniform1i(boolLoc, 1);
+
+    // Draw object
+    model->draw(*mainShader);
 }
