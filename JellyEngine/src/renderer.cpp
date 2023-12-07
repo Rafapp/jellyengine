@@ -43,7 +43,7 @@ void Renderer::setup(float wWidth, float wHeight) {
     modelTransform = mT * mR * mS;
 
     lightTransform = glm::mat4(1.0f);
-    lightPos = glm::vec3(2.5f, 2.5f, 2.5f);
+    lightPos = glm::vec3(2.0f, 2.0f, 2.0f);
     glm::mat4 lT = glm::translate(lightTransform, lightPos);
     glm::mat4 lR = glm::rotate(lightTransform, glm::radians(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
     glm::mat4 lS = glm::scale(lightTransform, glm::vec3(0.25f, 0.25f, 0.25f));
@@ -62,6 +62,13 @@ void Renderer::setup(float wWidth, float wHeight) {
     
     //Draw wireframe (debugging)
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); 
+
+    // Enable openGL color/alpha blending.
+    // the GPU combines the colors of multiple fragment
+    // into a final output color
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 
     cout << "COMPLETE::RENDERER SETUP" << endl;
 }

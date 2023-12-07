@@ -17,7 +17,7 @@ void main()
 		vec3 lightDir = normalize(lightPos - FragPos);
 		float diff = max(dot(norm, lightDir), 0.0); // Diffuse shading
 		vec3 result = color * (ambient + diff);
-		FragColor = vec4(result, 1.0);
+		FragColor = vec4(result, 0.5);
 	}
 	else{
 		FragColor = vec4(color, 1.0);

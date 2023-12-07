@@ -2,6 +2,12 @@ Stanford Dragon (converted to .obj from original .ply):
 Stanford Computer Graphics Laboratory
 https://graphics.stanford.edu/data/3Dscanrep/
 
-Gummy Bear:
+Gummy Bear 3D model:
 Isabella Baranyk
 https://sketchfab.com/3d-models/gummy-bear-6c807780df124dbfb7105dd64160bb2b
+
+GREAT Learning resource for SSS:
+https://therealmjp.github.io/posts/sss-intro/
+
+"A Practical Model for Subsurface Light Transport" Henrik WannJensen, StephenR.Marschner, MarcLevoy, Pat Hanrahan
+http://www.graphics.stanford.edu/papers/bssrdf/bssrdf.pdf
