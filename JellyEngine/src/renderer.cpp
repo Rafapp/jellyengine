@@ -96,11 +96,9 @@ void Renderer::draw(float wWidth, float wHeight) {
 
     // Update light translate, send to uniform
     lightTransform = glm::mat4(1.0f);
-
     glm::mat4 lT = glm::translate(lightTransform, lightPos);
     glm::mat4 lR = glm::rotate(lightTransform, glm::radians(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
     glm::mat4 lS = glm::scale(lightTransform, glm::vec3(0.125f, 0.125f, 0.125f));
-
     lightTransform = lT * lR * lS;
 
     glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(lightTransform));
@@ -114,6 +112,13 @@ void Renderer::draw(float wWidth, float wHeight) {
     light->draw(*mainShader);
 
     // Set object's transforms
+
+    modelTransform = glm::mat4(1.0f);
+    glm::mat4 mT = glm::translate(modelTransform, glm::vec3(0.0f, 0.0f, 0.0f));
+    glm::mat4 mR = glm::rotate(modelTransform, glm::radians(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+    glm::mat4 mS = glm::scale(modelTransform, glm::vec3(0.25f, objectScaleY, 0.25f));
+    modelTransform = mT * mR * mS;
+
     glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(modelTransform));
     glUniformMatrix4fv(modelViewLoc, 1, GL_FALSE, glm::value_ptr(view));
     glUniformMatrix4fv(modelProjectionLoc, 1, GL_FALSE, glm::value_ptr(projection));

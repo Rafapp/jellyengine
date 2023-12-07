@@ -11,3 +11,10 @@ https://therealmjp.github.io/posts/sss-intro/
 
 "A Practical Model for Subsurface Light Transport" Henrik WannJensen, StephenR.Marschner, MarcLevoy, Pat Hanrahan
 http://www.graphics.stanford.edu/papers/bssrdf/bssrdf.pdf
+
+"ReflectionfromLayeredSurfacesduetoSubsurfaceScattering" Hanrahan P. et al.
+https://cseweb.ucsd.edu/~ravir/6998/papers/p165-hanrahan.pdf
+
+Gpu Gems. Ch. 16 pt. 2, "Simple Scattering Approximations"
+https://developer.nvidia.com/gpugems/gpugems/part-iii-materials/chapter-16-real-time-approximations-subsurface-scattering
+

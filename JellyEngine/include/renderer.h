@@ -21,6 +21,7 @@ public:
 	glm::vec3 lightPos; // TODO: Abstract to light class
 	glm::mat4 modelTransform; // TODO: Abstract to mesh class
 	glm::mat4 lightTransform; // TODO: Abstract to light class
+	float objectScaleY = 0.25f;
 
 	Model* model;
 	Model* light;
