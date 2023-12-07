@@ -18,6 +18,7 @@ public:
 	Camera* camera;
 	Shader* mainShader;
 
+	glm::vec3 lightPos; // TODO: Abstract to light class
 	glm::mat4 modelTransform; // TODO: Abstract to mesh class
 	glm::mat4 lightTransform; // TODO: Abstract to mesh class
 	unsigned int VAO; // TODO: This has to go, classes need to be abstracted, but we can test with it for now

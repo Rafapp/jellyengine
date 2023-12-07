@@ -43,7 +43,8 @@ void Renderer::setup(float wWidth, float wHeight) {
     modelTransform = mT * mR * mS;
 
     lightTransform = glm::mat4(1.0f);
-    glm::mat4 lT = glm::translate(lightTransform, glm::vec3(1.0f, 0.0f, 0.0f));
+    lightPos = glm::vec3(2.5f, 2.5f, 2.5f);
+    glm::mat4 lT = glm::translate(lightTransform, lightPos);
     glm::mat4 lR = glm::rotate(lightTransform, glm::radians(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
     glm::mat4 lS = glm::scale(lightTransform, glm::vec3(0.25f, 0.25f, 0.25f));
     lightTransform = lT * lR * lS;
@@ -100,9 +101,13 @@ void Renderer::draw(float wWidth, float wHeight) {
     // Update light translate
     glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(lightTransform));
 
-    // Draw the light with its color and no lighting calculations
+    // Draw the light with its color and no lighting calculations. 
     glUniform3f(colorLoc, lightColor.x, lightColor.y, lightColor.z);
     glUniform1i(boolLoc, 0);
+
+    int lightPosLoc = glGetUniformLocation(mainShader->ID, "lightPos");
+    glUniform3f(lightPosLoc, lightPos.x, lightPos.y, lightPos.z);// Set light position.
+    
     light->draw(*mainShader);
     
 }
