@@ -92,13 +92,17 @@ void Renderer::draw(float wWidth, float wHeight) {
     // Draw the model with its color
     int colorLoc = glGetUniformLocation(mainShader->ID, "color");
     glUniform3f(colorLoc, modelColor.x, modelColor.y, modelColor.z);
+
+    int boolLoc = glGetUniformLocation(mainShader->ID, "calculateLighting");
+    glUniform1i(boolLoc, 1);
     model->draw(*mainShader);
 
     // Update light translate
     glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(lightTransform));
 
-    // Draw the light with its 
+    // Draw the light with its color and no lighting calculations
     glUniform3f(colorLoc, lightColor.x, lightColor.y, lightColor.z);
+    glUniform1i(boolLoc, 0);
     light->draw(*mainShader);
     
 }
