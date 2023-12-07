@@ -18,8 +18,13 @@ public:
 	Camera* camera;
 	Shader* mainShader;
 
-	glm::mat4 translate;
+	glm::mat4 modelTransform; // TODO: Abstract to mesh class
+	glm::mat4 lightTransform; // TODO: Abstract to mesh class
 	unsigned int VAO; // TODO: This has to go, classes need to be abstracted, but we can test with it for now
 
 	Model* model;
+	Model* light;
+
+	glm::vec3 modelColor = glm::vec3(0.0, 1.0, 0.0);
+	glm::vec3 lightColor = glm::vec3(1.0, 1.0, 1.0);
 };

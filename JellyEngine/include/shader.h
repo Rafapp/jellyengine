@@ -18,6 +18,8 @@ public:
 
     // use/activate the shader
     void use();
+    // stop using the shader (set to 0)
+    void stop();
 
     // utility uniform functions
     void setBool(const std::string& name, bool value) const;

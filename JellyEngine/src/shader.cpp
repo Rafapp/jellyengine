@@ -26,7 +26,7 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath) {
     {
         // open files
         cout << "Loading vertex shader from: " << vertexPath << endl;
-        cout << "Loading fragment shader from: " << fragmentPath << endl;
+        cout << "Loading fragment shader from: " << fragmentPath << endl << endl;
         vShaderFile.open(vertexPath);
         fShaderFile.open(fragmentPath);
         std::stringstream vShaderStream, fShaderStream;
@@ -98,10 +98,17 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath) {
     // delete the shaders as they're linked into our program now and no longer necessary
     glDeleteShader(vertex);
     glDeleteShader(fragment);
+
+    cout << "Loaded and compiled: " << vertexPath << endl;
+    cout << "Loaded and compiled: " << fragmentPath << endl << endl;
 }
 
 void Shader::use() {
     glUseProgram(ID);
+}
+
+void Shader::stop() {
+    glUseProgram(0);
 }
 
 void Shader::setBool(const std::string& name, bool value) const

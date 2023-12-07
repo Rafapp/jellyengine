@@ -22,25 +22,8 @@ void Renderer::setup(float wWidth, float wHeight) {
 	float lastX = wWidth / 2.0f;
 	float lastY = wHeight / 2.0f;
 
-	// Set up main shader
+	// Set up gummy shader and light shader
 	mainShader = new Shader(RESOURCES_PATH "shaders/shader.vert", RESOURCES_PATH "shaders/shader.frag");
-
-    /*
-     * TEST OBJECT
-     */
-
-    // Vertices to draw, we use the indexed triangle data structure
-    float vertices[] = {
-        // positions         // colors
-       -0.5f, 0.0f, 0.0f,  1.0f, 0.0f, 0.0f,
-       -0.5f, 0.5f, 0.0f,  0.0f, 1.0f, 0.0f,
-        0.5f,  0.0f, 0.0f,  0.0f, 0.0f, 1.0f,
-        0.5f,  0.5f, 0.0f,  1.0f, 0.0f, 0.0f
-    };
-    unsigned int indices[] = {  // note that we start from 0!
-    0, 1, 2,   // first triangle
-    2, 3, 1   // second triangle
-    };
 
     /*
      * BUFFERS
@@ -49,41 +32,35 @@ void Renderer::setup(float wWidth, float wHeight) {
     // Enable z-depth buffer
     glEnable(GL_DEPTH_TEST);
 
-    // Create array buffer object
-    unsigned int VBO;
-    glGenBuffers(1, &VBO); // Create the buffer object with an ID
-    glBindBuffer(GL_ARRAY_BUFFER, VBO); // Bind to the buffer
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW); // Copy to currently defined buffer
-
-    // Creating a vertex array object (which is like a vbo, but natively calls glVertexAttribPointer, and glEnableVertexAttribArray)
-    glGenVertexArrays(1, &VAO);
-    glBindVertexArray(VAO);
-
-    // Create an element buffer object (use the indexed triangle data structure)
-    unsigned int EBO;
-    glGenBuffers(1, &EBO);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-    // Specify data format, and location of first VERTEX (location = 0 in the vertex shader)
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-
-    // Specify data format, and location of first COLOR (location = 1 in the vertex shader) with a stride of 3
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-
-    // Draw wireframe
-    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); 
-
     /*
-     * MODEL
+     * MODELS: TODO ~ Have channels per-model, and a getTransform() function
      */
-    translate = glm::mat4(1.0f);
-    model = new Model(RESOURCES_PATH "3D/dragon.obj");
+
+    modelTransform = glm::mat4(1.0f);
+    glm::mat4 mT = glm::translate(modelTransform, glm::vec3(0.0f, 0.0f, 0.0f));
+    glm::mat4 mR = glm::rotate(modelTransform, glm::radians(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+    glm::mat4 mS = glm::scale(modelTransform, glm::vec3(0.25f, 0.25f, 0.25f));
+    modelTransform = mT * mR * mS;
+
+    lightTransform = glm::mat4(1.0f);
+    glm::mat4 lT = glm::translate(lightTransform, glm::vec3(1.0f, 0.0f, 0.0f));
+    glm::mat4 lR = glm::rotate(lightTransform, glm::radians(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+    glm::mat4 lS = glm::scale(lightTransform, glm::vec3(0.25f, 0.25f, 0.25f));
+    lightTransform = lT * lR * lS;
+
+    model = new Model(RESOURCES_PATH "3D/gummybear.fbx");
     cout << "COMPLETE::MODEL LOADED" << endl;
 
+    light = new Model(RESOURCES_PATH "3D/cube.obj");
+    cout << "COMPLETE::LIGHT LOADED" << endl;
+
+    /*
+    * SHADERS
+    */
     mainShader->use();
+    
+    //Draw wireframe (debugging)
+    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); 
 
     cout << "COMPLETE::RENDERER SETUP" << endl;
 }
@@ -102,16 +79,26 @@ void Renderer::draw(float wWidth, float wHeight) {
     // View matrix
     glm::mat4 view = camera->GetViewMatrix();
 
-    // Apply matrix transformations in shader
+    // Model uniforms
     int modelLoc = glGetUniformLocation(mainShader->ID, "model");
-    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(translate));
+    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelTransform));
 
-    int viewLoc = glGetUniformLocation(mainShader->ID, "view");
-    glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+    int modelViewLoc = glGetUniformLocation(mainShader->ID, "view");
+    glUniformMatrix4fv(modelViewLoc, 1, GL_FALSE, glm::value_ptr(view));
 
-    int projectionLoc = glGetUniformLocation(mainShader->ID, "projection");
-    glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
+    int modelProjectionLoc = glGetUniformLocation(mainShader->ID, "projection");
+    glUniformMatrix4fv(modelProjectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
 
-    // Draw the model
+    // Draw the model with its color
+    int colorLoc = glGetUniformLocation(mainShader->ID, "color");
+    glUniform3f(colorLoc, modelColor.x, modelColor.y, modelColor.z);
     model->draw(*mainShader);
+
+    // Update light translate
+    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(lightTransform));
+
+    // Draw the light with its 
+    glUniform3f(colorLoc, lightColor.x, lightColor.y, lightColor.z);
+    light->draw(*mainShader);
+    
 }
