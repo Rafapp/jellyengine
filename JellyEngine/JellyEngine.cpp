@@ -116,7 +116,6 @@ void update() {
     processInput(window);
 
     glfwGetFramebufferSize(window, &wWidth, &wHeight);
-    cout << renderer.objectScaleY << endl;
     //renderer.lightPos = glm::vec3(glm::cos(currentFrame) * 2.5f, 0.0f, glm::sin(currentFrame) * 2.5f);
     //renderer.objectScaleY = 0.25f + (glm::abs(glm::sin(currentFrame * 4.0f)) * .025f);
     renderer.draw(wWidth, wHeight);
