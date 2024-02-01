@@ -15,6 +15,7 @@
   <div align = "center">
     <img src = https://media.giphy.com/media/l4FGHzb9sBnQmYjyU/giphy.gif?cid=ecf05e471w0gc90idkxq0236pp7yqx1h0n127w79ykqxmwr3&ep=v1_gifs_search&rid=giphy.gif&ct=g width = "500px" align = "center">
     <br>
+    <br>
     <p>It is for this reason that we decided to build <b>Jelly Engine</b></p>
 </div>
 <br>
