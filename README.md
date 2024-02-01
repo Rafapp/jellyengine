@@ -6,6 +6,7 @@
 <h3>Motivation</h3>
 <p>Most (if not all) modern game engines are capable of simulating the behavior of physical bodies such as rigid bodies for realtime applications.</p>
 <br>
+<br>
   <div align = "center">
     <img src = https://media.giphy.com/media/J5XaDN7mg3lHLoUJbu/giphy.gif?cid=ecf05e47wjl82fppofuwugevgps9nhf4mlnhov0t7uk6kydd&ep=v1_gifs_search&rid=giphy.gif&ct=g width = "500px" align = "center">
   </div>
