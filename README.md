@@ -12,8 +12,9 @@
 <p>However their counterpart, soft bodies are not a feature available to developers out of the box or without the need to tinker and create custom solutions to solve for them for real-time rendering applications such as games and interactive applications.</p>
 <br>
   <div align = "center">
-    <img src = https://media.giphy.com/media/ct0EZMsDgLQAsTr1TD/giphy.gif?cid=790b7611qwjzlb74i06aezk82snu8tv0pztihdps989ofr8k&ep=v1_gifs_search&rid=giphy.gif&ct=g width = "500px" align = "center">
-    <p>It is for this reason that we decided to build Jelly Engine</p>
+    <img src = https://media.giphy.com/media/l4FGHzb9sBnQmYjyU/giphy.gif?cid=ecf05e471w0gc90idkxq0236pp7yqx1h0n127w79ykqxmwr3&ep=v1_gifs_search&rid=giphy.gif&ct=g width = "500px" align = "center">
+    <br>
+    <p>It is for this reason that we decided to build <b>Jelly Engine</b></p>
 </div>
 <br>
 <p>Soft bodies are all around us in the physical world. Materials such as human skin, rubber balls or even jelly cubes behave in complex ways, which are typically hard to simulate and even more so at runtime while maintaining good performance in most customer devices. Applications of such technology could be used for, but not limited to:</p>
