@@ -12,11 +12,12 @@ set(GLFW_INSTALL OFF CACHE BOOL "" FORCE)
 add_subdirectory("libraries/glfw-3.3.8") #window opener, input, create openGL contexts
 add_subdirectory("libraries/glad") #opengl loader
 add_subdirectory("libraries/glm") #math
+add_subdirectory("libraries/assimp") #model loading
 
 add_executable (JellyEngine "JellyEngine.cpp" "JellyEngine.h")
 
 # Add library names here
-target_link_libraries("${CMAKE_PROJECT_NAME}" PRIVATE glfw glad glm)
+target_link_libraries("${CMAKE_PROJECT_NAME}" PRIVATE glfw glad glm assimp)
 
 # Header files
 target_include_directories("${CMAKE_PROJECT_NAME}" PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include/")

@@ -1,8 +1,12 @@
-﻿// JellyEngine.h : Include file for standard system include files,
-// or project specific include files.
+﻿#pragma once
 
-#pragma once
+#include <renderer.h>
+#include <GLFW/glfw3.h>
 
-#include <iostream>
+Renderer renderer;
+GLFWwindow* window; // TODO: Same
 
-// TODO: Reference additional headers your program requires here.
+int setup();
+void update();
+void exit();
+
