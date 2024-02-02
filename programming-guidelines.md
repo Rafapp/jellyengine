@@ -65,7 +65,7 @@ private:
 ## Functions
 Functions must be capitalized with CamelCase. Inline functions are preferred if their use is repeated constantly (e.g. calculating a magnitude).
 
-```static inline float Magnitude(glm::vec3 v){ return(sqrt(v.x*v.x + v.y*v.y + v.z*v.z) }```
+```static inline float Magnitude(glm::vec3 v){ return(sqrt(v.x*v.x + v.y*v.y + v.z*v.z); }```
 
 ## Variables
 Variables should be camelCased, beginning with a lowercase, e.g.
