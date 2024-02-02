@@ -10,7 +10,9 @@ Source files: ```<name>.cpp```
 
 ## Header File Inclusion
 All header files must include the compiler flag ```#pragma once```
-Always include ONLY the files that are used
+
+Always include ONLY the files that are used.
+
 The inclusion order is:
 1. Header guard ```#pragma once```
 2. STD library imports (vector, string, thread ...)
