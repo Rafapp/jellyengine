@@ -1,8 +1,13 @@
-﻿/*
+/*
  * JELLYENGINE: Window, OS and runtime management (glfw). 
  */
 
 #include <iostream>
+
+// Our code
+#include "JellyEngine.h"
+#include "shader.h"
+#include "camera.h"
 
 #include <glm/glm.hpp>
 #include <glad/glad.h>
@@ -10,6 +15,7 @@
 
 #include <renderer.h>
 #include "JellyEngine.h"
+
 
 using namespace std;
 
