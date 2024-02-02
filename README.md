@@ -3,7 +3,7 @@
   <h1>Jelly Engine</h1>
   <h2>A 3D Game Engine that specializes in Soft Body Physics</h2>
 </div>
-<h3>Motivation</h3>
+<h2>Motivation</h2>
 <p>Most (if not all) modern game engines are capable of simulating the behavior of physical bodies such as rigid bodies for realtime applications.</p>
 <br>
   <div align = "center">
@@ -28,8 +28,8 @@
 </ul>
 <img src=https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExMHo5Nmh1eDdlbXkzc2RuYW5xdHprMmkwMDh5a3AwdjIwaDQ2NGZveCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/ct0EZMsDgLQAsTr1TD/giphy.gif>
 
-<h3>Features</h3>
+<h2>Features</h2>
 <p>In progress ...</p>
 
-<h3>How to use</h3>
+<h2>How to use</h2>
 <p>In progress ...</p>
