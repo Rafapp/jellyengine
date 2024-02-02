@@ -28,11 +28,8 @@
 </ul>
 <img src=https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExMHo5Nmh1eDdlbXkzc2RuYW5xdHprMmkwMDh5a3AwdjIwaDQ2NGZveCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/ct0EZMsDgLQAsTr1TD/giphy.gif>
 
+<h3>Features</h3>
+<p>In progress ...</p>
 
-
-
-### Features
-In progress ...
-
-### How to use
-In progress ...
+<h3>How to use</h3>
+<p>In progress ...</p>
