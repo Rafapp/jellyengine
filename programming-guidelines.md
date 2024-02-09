@@ -12,6 +12,8 @@ Source files: ```<name>.cpp```
 All header files must include the compiler flag ```#pragma once```
 
 Always include ONLY the files that are used.
+Local header files are included as ```#include "name.h"```
+Library header files are included as ```#include <name.h>```
 
 The inclusion order is:
 1. Header guard ```#pragma once```
