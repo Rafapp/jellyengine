@@ -12,12 +12,28 @@ Source files: ```<name>.cpp```
 All header files must include the compiler flag ```#pragma once```
 
 Always include ONLY the files that are used.
+Local header files are included as ```#include "name.h"```
+Library header files are included as ```#include <name.h>```
 
 The inclusion order is:
 1. Header guard ```#pragma once```
 2. STD library imports (vector, string, thread ...)
 3. Imported library imports (glm, assimp, glfw ...)
 4. Scripts (player.h, physics.h ...)
+
+## File description
+All header and source files must have a 1 line description of their functionality with the following format:
+```c++
+/*
+ * NAME: One line explanation of functionality
+ */
+```
+e.g.
+```c++
+/*
+ * RENDERER: Takes care of OpenGL rendering backend
+ */
+```
 
 ## Namespaces
 Not allowed, as they confuse programming syntax. e.g. ```using namespace std;```
