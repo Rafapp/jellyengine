@@ -7,13 +7,13 @@
 <p>Most (if not all) modern game engines are capable of simulating the behavior of physical bodies such as rigid bodies for realtime applications.</p>
 <br>
   <div align = "center">
-    <img src = https://media.giphy.com/media/J5XaDN7mg3lHLoUJbu/giphy.gif?cid=ecf05e47wjl82fppofuwugevgps9nhf4mlnhov0t7uk6kydd&ep=v1_gifs_search&rid=giphy.gif&ct=g width = "200" align = "center">
+    <img src = https://media.giphy.com/media/J5XaDN7mg3lHLoUJbu/giphy.gif?cid=ecf05e47wjl82fppofuwugevgps9nhf4mlnhov0t7uk6kydd&ep=v1_gifs_search&rid=giphy.gif&ct=g width = "300" align = "center">
   </div>
 <br>
 <p>However their counterpart, soft bodies are not a feature available to developers out of the box or without the need to tinker and create custom solutions to solve for them for real-time rendering applications such as games and interactive applications.</p>
 <br>
   <div align = "center">
-    <img src = https://media.giphy.com/media/l4FGHzb9sBnQmYjyU/giphy.gif?cid=ecf05e471w0gc90idkxq0236pp7yqx1h0n127w79ykqxmwr3&ep=v1_gifs_search&rid=giphy.gif&ct=g width = "200" align = "center">
+    <img src = https://media.giphy.com/media/l4FGHzb9sBnQmYjyU/giphy.gif?cid=ecf05e471w0gc90idkxq0236pp7yqx1h0n127w79ykqxmwr3&ep=v1_gifs_search&rid=giphy.gif&ct=g width = "300" align = "center">
     <br>
     <br>
     <p>It is for this reason that we decided to build <b>Jelly Engine</b></p>
