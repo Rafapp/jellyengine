@@ -20,4 +20,5 @@ public:
 
 	Model* model;
 	Model* light;
+	Model* plane;
 };

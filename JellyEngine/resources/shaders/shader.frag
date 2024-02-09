@@ -10,9 +10,9 @@ uniform bool calculateLighting = false;
 in vec3 Normal;
 in vec3 FragPos;
 
-float scatter = 2.5;
-float specularStrength = .75;
-float power = 256;
+float scatter = 1.5;
+float specularStrength = .125;
+float power = 128;
 
 void main()
 {
@@ -33,7 +33,7 @@ void main()
 		vec3 specular = spec * specularStrength * vec3(1.0, 1.0, 1.0); // Assume white light color
 
 		vec3 result = color * (ambient + scatter_diffuse) + specular;
-		FragColor = vec4(result, 1.0); // Transparency of model
+		FragColor = vec4(result, 0.75); // Transparency of model
 	}
 	else{
 		FragColor = vec4(color, 1.0);

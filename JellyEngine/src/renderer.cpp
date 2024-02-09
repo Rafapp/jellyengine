@@ -42,6 +42,11 @@ void Renderer::setup(float wWidth, float wHeight) {
     light->s = glm::vec3(0.125f, 0.125f, 0.125f);
     cout << "COMPLETE::LIGHT LOADED" << endl;
 
+    plane = new Model(RESOURCES_PATH "3D/plane.obj");
+    plane->color = glm::vec3(0.0f, 0.0f, 1.0f);
+    plane->p = glm::vec3(0.0f, -0.25f, 0.0f);
+    plane->s = glm::vec3(5.0f, -1.0f, 5.0f);
+
     /*
     * SHADERS
     */
@@ -53,8 +58,8 @@ void Renderer::setup(float wWidth, float wHeight) {
     // Enable openGL color/alpha blending.
     // the GPU combines the colors of multiple fragment
     // into a final output color (allows transparency)
-    //glEnable(GL_BLEND);
-    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     cout << "COMPLETE::RENDERER SETUP" << endl;
 }
@@ -92,15 +97,31 @@ void Renderer::draw(float wWidth, float wHeight) {
     glUniform3f(lightPosLoc, light->p.x, light->p.y, light->p.z);// Set light position.
     light->draw(*mainShader);
 
+    // TODO: For loop the hell out of the stuff under here with a vector and Scene
     glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(model->getTransform()));
     glUniformMatrix4fv(modelViewLoc, 1, GL_FALSE, glm::value_ptr(view));
     glUniformMatrix4fv(modelProjectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
 
-    // Set object's color and view position for phong, enable rendering calculations
+    // Send model data
     glUniform3f(colorLoc, model->color.x, model->color.y, model->color.z);
     glUniform3f(modelViewPosLoc, camera->Position.x, camera->Position.y, camera->Position.z);
     glUniform1i(boolLoc, 1);
 
-    // Draw object
+    // Render model
     model->draw(*mainShader);
+
+    // Send plane position
+    glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(plane->getTransform()));
+    glUniformMatrix4fv(modelViewLoc, 1, GL_FALSE, glm::value_ptr(view));
+    glUniformMatrix4fv(modelProjectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
+
+    // Send plane data ~ TODO: Streamline this for an arbitrary amount of objects
+    glUniform3f(colorLoc, plane->color.x, plane->color.y, plane->color.z);
+    glUniform3f(modelViewPosLoc, camera->Position.x, camera->Position.y, camera->Position.z);
+    glUniform1i(boolLoc, 1);
+
+    // Render plane
+    plane->draw(*mainShader);
+
+    
 }
