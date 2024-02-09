@@ -21,6 +21,20 @@ The inclusion order is:
 3. Imported library imports (glm, assimp, glfw ...)
 4. Scripts (player.h, physics.h ...)
 
+## File description
+All header and source files must have a 1 line description of their functionality with the following format:
+```c++
+/*
+ * NAME: One line explanation of functionality
+ */
+```
+e.g.
+```c++
+/*
+ * RENDERER: Takes care of OpenGL rendering backend
+ */
+```
+
 ## Namespaces
 Not allowed, as they confuse programming syntax. e.g. ```using namespace std;```
 
