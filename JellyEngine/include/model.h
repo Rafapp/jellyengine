@@ -6,12 +6,17 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
-#include <mesh.h>
-#include <shader.h>
+#include "mesh.h"
+#include "shader.h"
+#include "gameObject.h"
 
-class Model {
+class Model : public GameObject{
 public:
 	Model(char* path);
+    ~Model() {}
+
+    glm::vec3 color;
+
 	void draw(Shader& shader);
 private:
     // model data

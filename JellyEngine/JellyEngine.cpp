@@ -4,17 +4,13 @@
 
 #include <iostream>
 
-#include "shader.h"
-#include "camera.h"
-
 #include <glm/glm.hpp>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include "shader.h"
+#include "camera.h"
 #include "JellyEngine.h"
-
-
-using namespace std;
 
 Renderer renderer;
 GLFWwindow* window;
@@ -106,6 +102,8 @@ int setup() {
     // Set up renderer
     renderer.setup(wWidth, wHeight);
 
+    // Set up objects TODO: This would be parsed from a json/YAML
+
     cout << "COMPLETE::JELLY ENGINE SETUP" << endl;
 }
 
@@ -122,12 +120,17 @@ void update() {
     processInput(window);
 
     glfwGetFramebufferSize(window, &wWidth, &wHeight);
-    renderer.lightPos = glm::vec3(glm::cos(currentFrame) * 2.5f, 0.0f, glm::sin(currentFrame) * 2.5f);
-    renderer.objectScaleY = 0.25f + (glm::abs(glm::sin(currentFrame * 4.0f)) * .025f);
+    renderer.light->p = glm::vec3(glm::cos(currentFrame) * 2.5f, 0.0f, glm::sin(currentFrame) * 2.5f);
     renderer.draw(wWidth, wHeight);
 
     glfwSwapBuffers(window);
     glfwPollEvents();
+
+    // Move light around
+    
+
+    // "Squish" effect on model
+    renderer.model->s = glm::vec3(0.25f, 0.25f + (glm::abs(glm::sin(currentFrame * 4.0f)) * .025f), 0.25f);
 }
 
 /*

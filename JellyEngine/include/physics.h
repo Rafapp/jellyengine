@@ -1,10 +1,10 @@
 #pragma once
 
+#include <vector>
+
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-
-#include <vector>
 
 // A simple structure to represent a Vertex with position and color properties
 struct Vertex {
