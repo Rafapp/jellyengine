@@ -49,7 +49,7 @@ void Renderer::setup(float wWidth, float wHeight) {
     glm::mat4 lS = glm::scale(lightTransform, glm::vec3(0.25f, 0.25f, 0.25f));
     lightTransform = lT * lR * lS;
 
-    model = new Model(RESOURCES_PATH "3D/dragon.obj");
+    model = new Model(RESOURCES_PATH "3D/cube.obj");
     cout << "COMPLETE::MODEL LOADED" << endl;
 
     light = new Model(RESOURCES_PATH "3D/cube.obj");
@@ -66,8 +66,8 @@ void Renderer::setup(float wWidth, float wHeight) {
     // Enable openGL color/alpha blending.
     // the GPU combines the colors of multiple fragment
     // into a final output color
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    //glEnable(GL_BLEND);
+    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     cout << "COMPLETE::RENDERER SETUP" << endl;
 }
