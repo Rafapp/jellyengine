@@ -29,6 +29,19 @@
 <img src=https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExMHo5Nmh1eDdlbXkzc2RuYW5xdHprMmkwMDh5a3AwdjIwaDQ2NGZveCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/ct0EZMsDgLQAsTr1TD/giphy.gif>
 
 <h2>Features</h2>
+<h3>Rendering</h3>
+<ul>
+  <li>OpenGL-based rendering</li>
+  <li>3D Model loading through ASSIMP</li>
+  <li>Diffuse and specular shading</li>
+  <li>Shaders (fragment, vertex, compute)</li>
+  <li>"Jelly Shader," a jelly-like shader based on the Oren-Nayar reflectance model (emulate SSS)</li>
+  <li>Transparency</li>
+</ul>
+<div align = "center">
+<img src=https://github.com/Rafapp/jellyengine/assets/38381290/f11cf8ac-0174-47a3-84cb-1bfb2166e671 width = "500" align = "center">
+</div>
+
 <p>In progress ...</p>
 
 <h2>How to use</h2>
