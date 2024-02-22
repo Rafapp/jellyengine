@@ -1,7 +1,10 @@
 {
   "ExpandedNodes": [
     "",
-    "\\JellyEngine"
+    "\\JellyEngine",
+    "\\JellyEngine\\resources",
+    "\\JellyEngine\\src"
   ],
+  "SelectedNode": "\\JellyEngine\\JellyEngine.h",
   "PreviewInSolutionExplorer": false
 }

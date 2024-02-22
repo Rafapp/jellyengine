@@ -32,9 +32,16 @@ void Renderer::setup(float wWidth, float wHeight) {
     // Enable z-depth buffer
     glEnable(GL_DEPTH_TEST);
 
+    // Enable openGL color/alpha blending.
+    // the GPU combines the colors of multiple fragment
+    // into a final output color (allows transparency)
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     model = new Model(RESOURCES_PATH "3D/cube.obj");
     model->color = glm::vec3(0.0f, 1.0f, 0.0f);
-    model->s = glm::vec3(10.0f);
+    model->s = glm::vec3(1.0f);
+    model->p = glm::vec3(0.0f, 1.0f, 0.0f);
     cout << "COMPLETE::MODEL LOADED" << endl;
 
     light = new Model(RESOURCES_PATH "3D/cube.obj");
@@ -55,12 +62,6 @@ void Renderer::setup(float wWidth, float wHeight) {
     //Draw wireframe (debugging)
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); 
 
-    // Enable openGL color/alpha blending.
-    // the GPU combines the colors of multiple fragment
-    // into a final output color (allows transparency)
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
     cout << "COMPLETE::RENDERER SETUP" << endl;
 }
 
@@ -69,7 +70,6 @@ void Renderer::draw(float wWidth, float wHeight) {
 
     // BG and clearing buffers
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // Projection matrix
@@ -122,6 +122,4 @@ void Renderer::draw(float wWidth, float wHeight) {
 
     // Render plane
     plane->draw(*mainShader);
-
-    
 }

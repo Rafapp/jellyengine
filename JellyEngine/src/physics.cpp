@@ -18,11 +18,12 @@ struct Object {
     std::vector<Vertex> vertices;
     glm::vec3 velocity;
     glm::vec3 force;
+    glm::vec3 gravity;
     float mass;
     float damping;
 
-    Object(const std::vector<Vertex>& verts, float m, float d)
-        : vertices(verts), velocity(glm::vec3(1.0f)), force(glm::vec3(0)), mass(m), damping(d) {}
+    Object(const std::vector<Vertex>& verts, float m, float d, glm::vec3 g)
+        : vertices(verts), velocity(glm::vec3(0.0f)), force(glm::vec3(0)), mass(m), damping(d), gravity(g) {}
 
     glm::vec3 calculateCenter() const {
         glm::vec3 center(0.0f);
@@ -37,6 +38,18 @@ struct Object {
         force += newForce;
     }
 
+    void applyGravity() {
+        for (auto& vertex : vertices) {
+            applyForce(gravity * mass);
+        }
+	}
+
+    void scaleHeight(float scaleFactor) {
+        for (auto& vertex : vertices) {
+			vertex.position.y *= scaleFactor;
+		}
+	}
+
     void integrate(float dt) {
         // Apply damping to the velocity
         velocity *= damping;
@@ -49,58 +62,26 @@ struct Object {
         glm::vec3 center = calculateCenter();
         glm::vec3 newCenter = center + velocity * dt;
 
-        // Collision detection and response
-        if (newCenter.x <= -1.0f || newCenter.x >= 1.0f) {
-            velocity.x *= -1;
-            newCenter = center;
-        }
-        if (newCenter.y <= -1.0f || newCenter.y >= 1.0f) {
-            velocity.y *= -1;
-            newCenter = center;
-        }
-
-        // Update vertex positions relative to the new center
-        glm::vec3 displacement = newCenter - center;
+        // Update vertex positions and check for collisions individually
         for (auto& v : vertices) {
-            v.position += displacement;
+            // Integrate velocity to get new position
+            v.position += velocity * dt;
+
+            // Collision detection with the ground plane at y = 0
+            if (v.position.y < 0.0f) {
+                // Reset the y position to the ground level
+                v.position.y = 0.0f;
+
+                // Collision response: negate the y component of velocity
+                velocity.y = -velocity.y * 0.9f; // Apply some restitution (bounce)
+
+                // Optional: Apply friction to the x and z components of velocity
+                velocity.x *= 0.9f; // Simulate friction by reducing x velocity
+                velocity.z *= 0.9f; // Simulate friction by reducing z velocity
+            }
         }
 
         // Reset force after each integration step
         force = glm::vec3(0);
     }
-};
-
-// Define each vertex only once
-std::vector<Vertex> cubeVertices = {
-    // positions        // texture coords
-   Vertex(glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3(1.0f, 0.0f, 0.0f)), // 0
-   Vertex(glm::vec3(0.5f, -0.5f, -0.5f), glm::vec3(0.0f, 1.0f, 0.0f)), // 1
-   Vertex(glm::vec3(0.5f, 0.5f, -0.5f), glm::vec3(0.0f, 0.0f, 1.0f)), // 2
-   Vertex(glm::vec3(-0.5f, 0.5f, -0.5f), glm::vec3(1.0f, 1.0f, 0.0f)), // 3
-   Vertex(glm::vec3(-0.5f, -0.5f, 0.5f), glm::vec3(1.0f, 0.0f, 1.0f)), // 4
-   Vertex(glm::vec3(0.5f, -0.5f, 0.5f), glm::vec3(0.0f, 1.0f, 1.0f)), // 5
-   Vertex(glm::vec3(0.5f, 0.5f, 0.5f), glm::vec3(0.5f, 0.0f, 0.0f)), // 6
-   Vertex(glm::vec3(-0.5f, 0.5f, 0.5f), glm::vec3(0.0f, 0.5f, 0.0f))  // 7
-};
-
-// Define indices for each triangle of the cube
-unsigned int cubeIndices[] = {
-    // Back face
-    0, 1, 2,
-    2, 3, 0,
-    // Front face
-    4, 5, 6,
-    6, 7, 4,
-    // Left face
-    0, 4, 7,
-    7, 3, 0,
-    // Right face
-    1, 5, 6,
-    6, 2, 1,
-    // Bottom face
-    0, 1, 5,
-    5, 4, 0,
-    // Top face
-    3, 2, 6,
-    6, 7, 3
 };

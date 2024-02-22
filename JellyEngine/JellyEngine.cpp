@@ -130,7 +130,7 @@ void update() {
     
 
     // "Squish" effect on model
-    renderer.model->s = glm::vec3(0.25f, 0.25f + (glm::abs(glm::sin(currentFrame * 4.0f)) * .025f), 0.25f);
+    renderer.model->s = glm::vec3(0.25f, 0.25f + (glm::abs(glm::sin(currentFrame * 0.0f)) * .025f), 0.25f);
 }
 
 /*
