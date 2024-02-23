@@ -1,7 +1,7 @@
 <div align = "center">
   <img src = https://github.com/Rafapp/jellyengine/assets/38381290/d404dcfb-dd45-4afa-8a9f-42b7b3083d17 width = "500px" align = "center">
   <h1>Jelly Engine</h1>
-  <h2>A 3D Game Engine that specializes in Soft Body Physics</h2>
+  <h2>A 3D Game Engine specialized Soft Body Physics</h2>
 </div>
 <h2>Motivation</h2>
 <p>Most (if not all) modern game engines are capable of simulating the behavior of physical bodies such as rigid bodies for realtime applications.</p>
