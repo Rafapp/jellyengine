@@ -12,10 +12,8 @@
 
 using namespace std;
 
+
 void Renderer::setup(float wWidth, float wHeight) {
-    /*
-     * SETUP
-     */
 
 	// Set up camera
 	camera = new Camera();
@@ -24,10 +22,6 @@ void Renderer::setup(float wWidth, float wHeight) {
 
 	// Set up gummy shader and light shader
 	mainShader = new Shader(RESOURCES_PATH "shaders/shader.vert", RESOURCES_PATH "shaders/shader.frag");
-
-    /*
-     * BUFFERS
-     */
 
     // Enable z-depth buffer
     glEnable(GL_DEPTH_TEST);
@@ -54,6 +48,7 @@ void Renderer::setup(float wWidth, float wHeight) {
     plane->p = glm::vec3(0.0f, -0.25f, 0.0f);
     plane->s = glm::vec3(5.0f, -1.0f, 5.0f);
 
+
     /*
     * SHADERS
     */
@@ -67,15 +62,11 @@ void Renderer::setup(float wWidth, float wHeight) {
 
 void Renderer::draw(float wWidth, float wHeight) {
     glViewport(0, 0, wWidth, wHeight);
-
-    // BG and clearing buffers
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    // Projection matrix
+    // Projection and View matrix setup
     glm::mat4 projection = glm::perspective(glm::radians(camera->Zoom), (float)wWidth / (float)wHeight, 0.1f, 100.0f);
-
-    // View matrix
     glm::mat4 view = camera->GetViewMatrix();
 
     // Uniforms
@@ -107,9 +98,8 @@ void Renderer::draw(float wWidth, float wHeight) {
     glUniform3f(modelViewPosLoc, camera->Position.x, camera->Position.y, camera->Position.z);
     glUniform1i(boolLoc, 1);
 
-    // Render model
-    model->draw(*mainShader);
-
+    model->draw(*mainShader); // Drawing the model
+    
     // Send plane position
     glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(plane->getTransform()));
     glUniformMatrix4fv(modelViewLoc, 1, GL_FALSE, glm::value_ptr(view));

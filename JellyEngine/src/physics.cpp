@@ -79,6 +79,8 @@ struct Object {
                 velocity.x *= 0.9f; // Simulate friction by reducing x velocity
                 velocity.z *= 0.9f; // Simulate friction by reducing z velocity
             }
+
+            cout << "newCenter: " << newCenter.x << " " << newCenter.y << " " << newCenter.z << endl;
         }
 
         // Reset force after each integration step
