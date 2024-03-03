@@ -56,6 +56,14 @@ static void error_callback(int error, const char* description)
     fprintf(stderr, "Error: %s\n", description);
 }
 
+// Assuming you have a function to create vertices from Model data
+std::vector<Vertex> modelToVertices(Model& model) {
+    std::vector<Vertex> vertices;
+    // Convert model data to Vertex struct used by Object
+    // ...
+    return vertices;
+}
+
 /*
  * SET UP GLFW, GLAD AND OPENGL
  */
@@ -103,7 +111,6 @@ int setup() {
     renderer.setup(wWidth, wHeight);
 
     // Set up objects TODO: This would be parsed from a json/YAML
-
     cout << "COMPLETE::JELLY ENGINE SETUP" << endl;
 }
 
@@ -120,18 +127,16 @@ void update() {
     processInput(window);
 
     glfwGetFramebufferSize(window, &wWidth, &wHeight);
+
+    // Move light around
     renderer.light->p = glm::vec3(glm::cos(currentFrame) * 2.5f, 0.5f, glm::sin(currentFrame) * 2.5f);
     renderer.draw(wWidth, wHeight);
 
     glfwSwapBuffers(window);
     glfwPollEvents();
 
-    // Move light around
-
     // "Squish" effect on model
     renderer.model->s = glm::vec3(0.25f, 0.25f + (glm::abs(glm::sin(currentFrame * 0.0f)) * .025f), 0.25f);
-
-
 }
 
 /*
