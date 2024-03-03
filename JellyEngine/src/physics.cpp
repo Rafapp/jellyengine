@@ -1,6 +1,7 @@
 #include <glm/glm.hpp>
 #include <iostream>
 #include <vector>
+#include "physics.h"
 
 using namespace std;
 
@@ -14,7 +15,7 @@ struct Vertex {
 };
 
 // Handles the collection of vertices, the object's velocity, and its physics integration
-struct Object {
+class PhysicsObject {
     std::vector<Vertex> vertices;
     glm::vec3 velocity;
     glm::vec3 force;
@@ -22,7 +23,7 @@ struct Object {
     float mass;
     float damping;
 
-    Object(const std::vector<Vertex>& verts, float m, float d, glm::vec3 g)
+    PhysicsObject(const std::vector<Vertex>& verts, float m, float d, glm::vec3 g)
         : vertices(verts), velocity(glm::vec3(0.0f)), force(glm::vec3(0)), mass(m), damping(d), gravity(g) {}
 
     glm::vec3 calculateCenter() const {
@@ -51,7 +52,6 @@ struct Object {
 	}
 
     void integrate(float dt) {
-        // Apply damping to the velocity
         velocity *= damping;
 
         // Update velocity based on force and mass
@@ -69,15 +69,14 @@ struct Object {
 
             // Collision detection with the ground plane at y = 0
             if (v.position.y < 0.0f) {
-                // Reset the y position to the ground level
-                v.position.y = 0.0f;
-
-                // Collision response: negate the y component of velocity
-                velocity.y = -velocity.y * 0.9f; // Apply some restitution (bounce)
-
-                // Optional: Apply friction to the x and z components of velocity
-                velocity.x *= 0.9f; // Simulate friction by reducing x velocity
-                velocity.z *= 0.9f; // Simulate friction by reducing z velocity
+                v.position += velocity * dt;
+                // Check for collision with the ground
+                if (v.position.y < 0.0f) {
+                    v.position.y = 0.0f;
+                    velocity.y = -velocity.y * 0.9f;  // Apply some restitution
+                    velocity.x *= 0.9f;  // Simulate friction by reducing x velocity
+                    velocity.z *= 0.9f;  // Simulate friction by reducing z velocity
+                }
             }
 
             cout << "newCenter: " << newCenter.x << " " << newCenter.y << " " << newCenter.z << endl;

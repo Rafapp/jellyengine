@@ -16,7 +16,7 @@ struct Vertex {
 };
 
 // Handles the collection of vertices and the object's physics properties
-struct PhysicsObject {
+class PhysicsObject {
     std::vector<Vertex> vertices;
     glm::vec3 velocity;
     glm::vec3 force;
