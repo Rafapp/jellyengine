@@ -110,6 +110,7 @@ int setup() {
 
     // Set up renderer
     renderer.setup(wWidth, wHeight);
+    cout << "COMPLETE::OBJECTS SETUP" << endl;
 
     // Set up objects TODO: This would be parsed from a json/YAML
     cout << "COMPLETE::JELLY ENGINE SETUP" << endl;
@@ -136,8 +137,9 @@ void update() {
 
     // Update physics for the model
     if (renderer.model) {
-        renderer.model->physicsObject->update(deltaTime);
-        renderer.model->update(deltaTime); // This function should update the model's position based on its physics object
+        float scaledDeltaTime = deltaTime * 0.1f; // Scale down the delta time to slow down the physics
+        renderer.model->physicsObject->update(scaledDeltaTime);
+        renderer.model->update(scaledDeltaTime); // This function should update the model's position based on its physics object
     }
 
     glfwSwapBuffers(window);
@@ -146,7 +148,6 @@ void update() {
     // "Squish" effect on model
     // renderer.model->s = glm::vec3(0.25f, 0.25f + (glm::abs(glm::sin(currentFrame * 0.0f)) * .025f), 0.25f);
 
-    //renderer.model->s = glm::vec3(0.25f, 0.25f, 0.25f); // Set scale to 0.25f for all axes
 }
 
 /*

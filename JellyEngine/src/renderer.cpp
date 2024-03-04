@@ -35,7 +35,7 @@ void Renderer::setup(float wWidth, float wHeight) {
 
     model = new Model(RESOURCES_PATH "3D/cube.obj");
     model->color = glm::vec3(0.0f, 1.0f, 0.0f);
-    model->s = glm::vec3(1.0f);
+    model->s = glm::vec3(0.25f);
     model->p = glm::vec3(0.0f, 1.0f, 0.0f);
     cout << "COMPLETE::MODEL LOADED" << endl;
 
@@ -99,6 +99,8 @@ void Renderer::draw(float wWidth, float wHeight) {
     glUniform3f(colorLoc, model->color.x, model->color.y, model->color.z);
     glUniform3f(modelViewPosLoc, camera->Position.x, camera->Position.y, camera->Position.z);
     glUniform1i(boolLoc, 1);
+
+    cout << "Model position before render: " << model->p.x << ", " << model->p.y << ", " << model->p.z << endl;
 
     model->draw(*mainShader); // Drawing the model
 

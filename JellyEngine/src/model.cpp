@@ -90,4 +90,5 @@ Model::Model(char* path) {
     loadModel(path);
     physicsObject = new PhysicsObject;
     physicsObject->acceleration = glm::vec3(0.0f, -9.81f, 0.0f); // Gravity
+    physicsObject->velocity = glm::vec3(0.0f, 0.0f, 0.0f);
 }

@@ -3,7 +3,7 @@
 #include <vector>
 #include "physics.h"
 
-PhysicsObject::PhysicsObject() : position(0.0f), velocity(0.0f), acceleration(0.0f) {
+PhysicsObject::PhysicsObject() : position(0.0f, 1.0f, 0.0f), velocity(0.0f), acceleration(0.0f) {
     // Constructor initializes position, velocity, and acceleration to zero
 }
 
@@ -12,7 +12,4 @@ void PhysicsObject::update(float deltaTime) {
     velocity += acceleration * deltaTime;
     // Update the position based on velocity
     position += velocity * deltaTime;
-    
-    // Print the position of the object
-    std::cout << "Position: " << position.x << ", " << position.y << ", " << position.z << std::endl;
 }
