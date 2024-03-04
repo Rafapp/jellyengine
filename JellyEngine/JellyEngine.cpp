@@ -8,9 +8,10 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include "shader.h"
-#include "camera.h"
 #include "JellyEngine.h"
+#include "model.h"
+#include "physics.h"
+
 
 Renderer renderer;
 GLFWwindow* window;
@@ -126,17 +127,26 @@ void update() {
     // Input
     processInput(window);
 
+    // Resize window
     glfwGetFramebufferSize(window, &wWidth, &wHeight);
 
     // Move light around
     renderer.light->p = glm::vec3(glm::cos(currentFrame) * 2.5f, 0.5f, glm::sin(currentFrame) * 2.5f);
     renderer.draw(wWidth, wHeight);
 
+    // Update physics for the model
+    if (renderer.model) {
+        renderer.model->physicsObject->update(deltaTime);
+        renderer.model->update(deltaTime); // This function should update the model's position based on its physics object
+    }
+
     glfwSwapBuffers(window);
     glfwPollEvents();
 
     // "Squish" effect on model
-    renderer.model->s = glm::vec3(0.25f, 0.25f + (glm::abs(glm::sin(currentFrame * 0.0f)) * .025f), 0.25f);
+    // renderer.model->s = glm::vec3(0.25f, 0.25f + (glm::abs(glm::sin(currentFrame * 0.0f)) * .025f), 0.25f);
+
+    //renderer.model->s = glm::vec3(0.25f, 0.25f, 0.25f); // Set scale to 0.25f for all axes
 }
 
 /*

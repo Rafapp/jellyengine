@@ -4,9 +4,7 @@
 
 #include <glad/glad.h>
 #include <iostream>
-
-#include <shader.h>
-#include <mesh.h>
+#include "mesh.h"
 
 
 using namespace std;

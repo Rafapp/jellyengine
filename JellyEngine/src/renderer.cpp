@@ -10,18 +10,19 @@
 
 #include "renderer.h"
 
+
 using namespace std;
 
 
 void Renderer::setup(float wWidth, float wHeight) {
 
-	// Set up camera
-	camera = new Camera();
-	float lastX = wWidth / 2.0f;
-	float lastY = wHeight / 2.0f;
+    // Set up camera
+    camera = new Camera();
+    float lastX = wWidth / 2.0f;
+    float lastY = wHeight / 2.0f;
 
-	// Set up gummy shader and light shader
-	mainShader = new Shader(RESOURCES_PATH "shaders/shader.vert", RESOURCES_PATH "shaders/shader.frag");
+    // Set up gummy shader and light shader
+    mainShader = new Shader(RESOURCES_PATH "shaders/shader.vert", RESOURCES_PATH "shaders/shader.frag");
 
     // Enable z-depth buffer
     glEnable(GL_DEPTH_TEST);
@@ -47,13 +48,14 @@ void Renderer::setup(float wWidth, float wHeight) {
     plane->color = glm::vec3(0.0f, 0.0f, 1.0f);
     plane->p = glm::vec3(0.0f, -0.25f, 0.0f);
     plane->s = glm::vec3(5.0f, -1.0f, 5.0f);
+    cout << "COMPLETE::PLANE LOADED" << endl;
 
 
     /*
     * SHADERS
     */
     mainShader->use();
-    
+
     //Draw wireframe (debugging)
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); 
 
@@ -99,7 +101,7 @@ void Renderer::draw(float wWidth, float wHeight) {
     glUniform1i(boolLoc, 1);
 
     model->draw(*mainShader); // Drawing the model
-    
+
     // Send plane position
     glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(plane->getTransform()));
     glUniformMatrix4fv(modelViewLoc, 1, GL_FALSE, glm::value_ptr(view));

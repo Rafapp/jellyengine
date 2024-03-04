@@ -1,20 +1,23 @@
-/*
- * MODEL: A model has a mesh, a material, and channels (position, rotation, scale). 
- * This class loads(Assimp) and draws models
- */
-
 #include <string>
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
-#include <model.h>
+#include "model.h"
+#include "physics.h"
+
+void Model::update(float deltaTime) {
+    if (physicsObject) {
+        physicsObject->update(deltaTime); 
+        this->p = physicsObject->position;
+    }
+}
 
 void Model::draw(Shader& shader) {
-	// Draw all meshes in the model
-	for (unsigned int i = 0; i < meshes.size(); i++)
-		meshes[i].draw(shader);
+    // Draw all meshes in the model
+    for (unsigned int i = 0; i < meshes.size(); i++)
+        meshes[i].draw(shader);
 }
 
 void Model::loadModel(string path) {
@@ -82,7 +85,9 @@ Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene)
     return Mesh(vertices, indices, textures);
 }
 
+
 Model::Model(char* path) {
     loadModel(path);
+    physicsObject = new PhysicsObject;
+    physicsObject->acceleration = glm::vec3(0.0f, -9.81f, 0.0f); // Gravity
 }
-

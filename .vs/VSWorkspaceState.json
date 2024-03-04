@@ -2,7 +2,9 @@
   "ExpandedNodes": [
     "",
     "\\JellyEngine",
+    "\\JellyEngine\\include",
     "\\JellyEngine\\resources",
+    "\\JellyEngine\\resources\\shaders",
     "\\JellyEngine\\src"
   ],
   "PreviewInSolutionExplorer": false
