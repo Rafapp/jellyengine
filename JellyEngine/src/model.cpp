@@ -9,8 +9,8 @@
 
 void Model::update(float deltaTime) {
     if (physicsObject) {
-        physicsObject->update(deltaTime); 
-        this->p = physicsObject->position;
+        physicsObject->update(deltaTime);
+        this->p = physicsObject->position; // Update Model's position
     }
 }
 
@@ -90,5 +90,9 @@ Model::Model(char* path) {
     loadModel(path);
     physicsObject = new PhysicsObject;
     physicsObject->acceleration = glm::vec3(0.0f, -9.81f, 0.0f); // Gravity
-    physicsObject->velocity = glm::vec3(0.0f, 0.0f, 0.0f);
+
+    // Set the AABB based on the model's size
+    // For example, if the model is a 1x1x1 cube centered at the origin before any scaling
+    // then the AABB would be from -0.5 to 0.5 in all directions
+    physicsObject->setAABB(glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3(0.5f, 0.5f, 0.5f));
 }

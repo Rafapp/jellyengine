@@ -8,4 +8,4 @@
 
 int setup();
 void update();
-void exit();
+void shutdownEngine();  // Renamed from 'exit' to 'shutdownEngine'

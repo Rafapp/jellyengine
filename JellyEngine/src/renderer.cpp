@@ -9,6 +9,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "renderer.h"
+#include "physics.h"
 
 
 using namespace std;
@@ -34,10 +35,15 @@ void Renderer::setup(float wWidth, float wHeight) {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     model = new Model(RESOURCES_PATH "3D/cube.obj");
-    model->color = glm::vec3(0.0f, 1.0f, 0.0f);
+    model->color = glm::vec3(0.0f, 0.5f, 0.0f);
     model->s = glm::vec3(0.25f);
     model->p = glm::vec3(0.0f, 1.0f, 0.0f);
     cout << "COMPLETE::MODEL LOADED" << endl;
+
+    // Assuming the cube is 1 unit in size and the model is centered around the origin
+    glm::vec3 scaledAABBMin = glm::vec3(-0.5f, -0.5f, -0.5f) * model->s;
+    glm::vec3 scaledAABBMax = glm::vec3(0.5f, 0.5f, 0.5f) * model->s;
+    model->physicsObject->setAABB(scaledAABBMin, scaledAABBMax);
 
     light = new Model(RESOURCES_PATH "3D/cube.obj");
     light->color = glm::vec3(1.0f, 1.0f, 1.0f);
@@ -99,8 +105,6 @@ void Renderer::draw(float wWidth, float wHeight) {
     glUniform3f(colorLoc, model->color.x, model->color.y, model->color.z);
     glUniform3f(modelViewPosLoc, camera->Position.x, camera->Position.y, camera->Position.z);
     glUniform1i(boolLoc, 1);
-
-    cout << "Model position before render: " << model->p.x << ", " << model->p.y << ", " << model->p.z << endl;
 
     model->draw(*mainShader); // Drawing the model
 

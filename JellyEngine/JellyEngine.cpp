@@ -21,6 +21,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow* window);
+void exit();
 
 // Delta time
 float deltaTime = 0.0f;	// Time between current frame and last frame
@@ -137,41 +138,51 @@ void update() {
 
     // Update physics for the model
     if (renderer.model) {
-        float scaledDeltaTime = deltaTime * 0.1f; // Scale down the delta time to slow down the physics
+        float scaledDeltaTime = deltaTime * 0.05f; // Scale down the delta time to slow down the physics
         renderer.model->physicsObject->update(scaledDeltaTime);
-        renderer.model->update(scaledDeltaTime); // This function should update the model's position based on its physics object
+
+        // Collision detection
+        const float groundLevel = renderer.plane->p.y + (renderer.plane->s.y * 0.5f); // Assuming the plane's origin is at its center
+        glm::vec3 modelBottomPoint = renderer.model->p + renderer.model->physicsObject->aabbMin;
+
+        if (modelBottomPoint.y <= groundLevel) {
+            renderer.model->physicsObject->velocity = glm::vec3(0.0f); // Stop the object from moving further
+            renderer.model->p.y = groundLevel - renderer.model->physicsObject->aabbMin.y; // Position the object on top of the ground
+            renderer.model->physicsObject->hasCollided = true; // Flag collision as true
+        }
+        else {
+            renderer.model->update(scaledDeltaTime); // Update the model's position based on physics
+        }
     }
 
     glfwSwapBuffers(window);
     glfwPollEvents();
 
-    // "Squish" effect on model
+    // Optional: "Squish" effect on model, if needed
     // renderer.model->s = glm::vec3(0.25f, 0.25f + (glm::abs(glm::sin(currentFrame * 0.0f)) * .025f), 0.25f);
-
 }
 
 /*
  * EXIT
  */
-void exit() {
+void shutdownEngine() {
     glfwDestroyWindow(window);
     glfwTerminate();
-    exit(EXIT_SUCCESS);
-    cout << "EXIT::JELLY ENGINE QUIT" << endl;
+    std::cout << "EXIT::JELLY ENGINE QUIT" << std::endl;
 }
 
-int main()
-{
-    setup();
+int main() {
+    if (setup() == -1) {
+        return -1; // Ensure that setup is successful before proceeding
+    }
 
-    // Runtime loop
-    while (!glfwWindowShouldClose(window))
-    {
+    // Main loop
+    while (!glfwWindowShouldClose(window)) {
         update();
     }
 
-    exit();
-
+    shutdownEngine(); // Clean shutdown
+    return 0; // Return success
 }
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
