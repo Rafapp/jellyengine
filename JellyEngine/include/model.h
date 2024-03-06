@@ -35,4 +35,6 @@ private:
     void loadModel(string path); // load the model from a file
     void processNode(aiNode* node, const aiScene* scene); // process each node in the model
     Mesh processMesh(aiMesh* mesh, const aiScene* scene); // process each mesh in the model
+
+
 };

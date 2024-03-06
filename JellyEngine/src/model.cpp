@@ -22,7 +22,7 @@ void Model::draw(Shader& shader) {
 
 void Model::loadModel(string path) {
     Assimp::Importer import;
-    const aiScene* scene = import.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
+    const aiScene * scene = import.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
 
     if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
     {
@@ -96,3 +96,4 @@ Model::Model(char* path) {
     // then the AABB would be from -0.5 to 0.5 in all directions
     physicsObject->setAABB(glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3(0.5f, 0.5f, 0.5f));
 }
+

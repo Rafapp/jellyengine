@@ -149,6 +149,9 @@ void update() {
             renderer.model->physicsObject->velocity = glm::vec3(0.0f); // Stop the object from moving further
             renderer.model->p.y = groundLevel - renderer.model->physicsObject->aabbMin.y; // Position the object on top of the ground
             renderer.model->physicsObject->hasCollided = true; // Flag collision as true
+
+            // print position of model
+            std::cout << "Model position: " << renderer.model->p.x << ", " << renderer.model->p.y << ", " << renderer.model->p.z << std::endl;
         }
         else {
             renderer.model->update(scaledDeltaTime); // Update the model's position based on physics

@@ -9,7 +9,7 @@ PhysicsObject::PhysicsObject() : position(0.0f, 1.0f, 0.0f), velocity(0.0f), acc
 
 void PhysicsObject::update(float deltaTime) {
     // The ground plane is at y = -0.25
-    float groundLevel = -0.25f;
+    float groundLevel = 0.0f;
 
     if (hasCollided) {
         velocity = glm::vec3(0.0f);
