@@ -3,6 +3,9 @@
  */
 
 #include <iostream>
+#include <chrono>  // add timer variables
+#include <iomanip> // For std::put_time
+#include <ctime>   // For std::time_t and std::tm
 
 #include <glad/glad.h>
 #include <glm/glm.hpp>
@@ -16,7 +19,6 @@ using namespace std;
 
 
 void Renderer::setup(float wWidth, float wHeight) {
-
     // Set up camera
     camera = new Camera();
     float lastX = wWidth / 2.0f;
@@ -100,13 +102,29 @@ void Renderer::draw(float wWidth, float wHeight) {
     glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(model->getTransform()));
     glUniformMatrix4fv(modelViewLoc, 1, GL_FALSE, glm::value_ptr(view));
     glUniformMatrix4fv(modelProjectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
-
+    
     // Send model data
     glUniform3f(colorLoc, model->color.x, model->color.y, model->color.z);
     glUniform3f(modelViewPosLoc, camera->Position.x, camera->Position.y, camera->Position.z);
     glUniform1i(boolLoc, 1);
 
-    model->draw(*mainShader); // Drawing the model
+    // Render model
+    if (!modelRenderedOnce) {
+        startTime = std::chrono::high_resolution_clock::now();
+        std::time_t start_time = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+        // std::cout << "Starting rendering: Model [Started at " << std::put_time(std::localtime(&start_time), "%F %T") << "]" << std::endl;
+
+        model->draw(*mainShader);  // Render the model
+
+        endTime = std::chrono::high_resolution_clock::now();
+        logRenderTime("Model");
+
+        modelRenderedOnce = true;  // Set the flag to true after the first render
+    }
+    else {
+        // Still render the model but without logging
+        model->draw(*mainShader);
+    }
 
     // Send plane position
     glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(plane->getTransform()));
@@ -120,4 +138,48 @@ void Renderer::draw(float wWidth, float wHeight) {
 
     // Render plane
     plane->draw(*mainShader);
+
+    // Calculate and display the FPS
+    // calculateAndDisplayFPS();
 }
+
+void Renderer::logRenderTime(const std::string& objectName) {
+    auto endSystemTime = std::chrono::system_clock::now();
+    std::time_t end_time = std::chrono::system_clock::to_time_t(endSystemTime);
+
+    auto durationInMicroseconds = std::chrono::duration_cast<std::chrono::microseconds>(endTime - startTime).count();
+    long durationInMilliseconds = durationInMicroseconds / 1000;  // Convert microseconds to milliseconds
+    long microsecondsPart = durationInMicroseconds % 1000;  // Get the remainder as microseconds
+
+    // Using put_time to format the time output
+    std::cout << "Render time for " << objectName << ": "
+        << durationInMilliseconds << " milliseconds "
+        << microsecondsPart << " microseconds "
+        << "[Finished at " << std::put_time(std::localtime(&end_time), "%F %T") << "]" << std::endl;
+}
+
+void Renderer::calculateAndDisplayFPS() {
+    auto currentTime = std::chrono::high_resolution_clock::now();
+    frameCount++;
+    totalFrameCount++;
+
+    // Calculate FPS every second
+    if (std::chrono::duration_cast<std::chrono::seconds>(currentTime - lastFrameTime).count() >= 1) {
+        std::cout << "Second " << std::chrono::duration_cast<std::chrono::seconds>(currentTime - lastFPSUpdateTime).count()
+            << ": FPS: " << frameCount << std::endl;
+        frameCount = 0;
+        lastFrameTime = currentTime;
+    }
+
+    // Calculate and display average FPS every minute
+    if (std::chrono::duration_cast<std::chrono::seconds>(currentTime - lastFPSUpdateTime).count() >= 60) {
+        int averageFPS = totalFrameCount / 60; // Assuming the update is called every second, totalFrameCount is the sum of 60 seconds
+        std::cout << "Gummy Bear Model" << std::endl;
+        std::cout << "Average FPS over the last minute: " << averageFPS << std::endl;
+
+        // Reset the counters
+        totalFrameCount = 0;
+        lastFPSUpdateTime = currentTime;
+    }
+}
+

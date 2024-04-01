@@ -142,16 +142,17 @@ void update() {
         renderer.model->physicsObject->update(scaledDeltaTime);
 
         // Collision detection
-        const float groundLevel = renderer.plane->p.y + (renderer.plane->s.y * 0.5f); // Assuming the plane's origin is at its center
+        const float groundLevel = renderer.plane->p.y; // Assuming the plane's origin is at its center
         glm::vec3 modelBottomPoint = renderer.model->p + renderer.model->physicsObject->aabbMin;
 
+        // print ground level
+        // std::cout << "Ground level: " << groundLevel << std::endl;
+        // print model bottom point
+        // std::cout << "Model bottom point: " << modelBottomPoint.x << ", " << modelBottomPoint.y << ", " << modelBottomPoint.z << std::endl;
         if (modelBottomPoint.y <= groundLevel) {
             renderer.model->physicsObject->velocity = glm::vec3(0.0f); // Stop the object from moving further
             renderer.model->p.y = groundLevel - renderer.model->physicsObject->aabbMin.y; // Position the object on top of the ground
             renderer.model->physicsObject->hasCollided = true; // Flag collision as true
-
-            // print position of model
-            std::cout << "Model position: " << renderer.model->p.x << ", " << renderer.model->p.y << ", " << renderer.model->p.z << std::endl;
         }
         else {
             renderer.model->update(scaledDeltaTime); // Update the model's position based on physics

@@ -3,7 +3,9 @@
     "",
     "\\JellyEngine",
     "\\JellyEngine\\include",
+    "\\JellyEngine\\libraries",
     "\\JellyEngine\\resources",
+    "\\JellyEngine\\resources\\3D",
     "\\JellyEngine\\resources\\shaders",
     "\\JellyEngine\\src"
   ],

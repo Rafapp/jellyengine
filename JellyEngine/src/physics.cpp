@@ -9,7 +9,7 @@ PhysicsObject::PhysicsObject() : position(0.0f, 1.0f, 0.0f), velocity(0.0f), acc
 
 void PhysicsObject::update(float deltaTime) {
     // The ground plane is at y = -0.25
-    float groundLevel = 0.0f;
+    float groundLevel = -0.25f;
 
     if (hasCollided) {
         velocity = glm::vec3(0.0f);
@@ -24,6 +24,15 @@ void PhysicsObject::update(float deltaTime) {
 
     // Calculate the lowest point of the AABB
     glm::vec3 lowestPoint = predictedPosition + aabbMin;
+    
+    // Print aabbMin.y
+    //std::cout << "aabbMin.y: " << aabbMin.y << std::endl;
+
+    // Print predicted position.y
+    //std::cout << "predictedPosition.y: " << predictedPosition.y << std::endl;
+
+    // Print ground level
+    //std::cout << "Ground level: " << groundLevel << std::endl;
 
     // Check for collision with the ground
     if (lowestPoint.y <= groundLevel) {
