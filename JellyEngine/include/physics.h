@@ -11,17 +11,15 @@ public:
     glm::vec3 position;
     glm::vec3 velocity;
     glm::vec3 acceleration;
+    float restitution; // Bounce restitution coefficient
+    float velocityThreshold; // Velocity below which the object will stop bouncing
+    float ground = -0.25;
 
-    /*
-    * Axis-Aligned Bounding Box (AABB) for collision detection
-    * Uses a bounding volume that encapsulates your object
-    */
     glm::vec3 aabbMin; // Minimum corner of the AABB
     glm::vec3 aabbMax; // Maximum corner of the AABB
-
-    bool hasCollided;
+    bool hasCollided = false;
 
     PhysicsObject();
-    void update(float deltaTime);
+    void update(float deltaTime, glm::vec3 scaledAABBMin);
     void setAABB(const glm::vec3& min, const glm::vec3& max);
 };

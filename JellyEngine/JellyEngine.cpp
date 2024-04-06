@@ -2,37 +2,31 @@
  * JELLYENGINE: Window, OS and runtime management (glfw). 
  */
 
+// Core Libraries
 #include <iostream>
 
+// OpenGL Libraries
 #include <glm/glm.hpp>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+// Engine Components
 #include "JellyEngine.h"
-#include "model.h"
-#include "physics.h"
 
+// Engine Renderer
+Renderer renderer; // Engine renderer component
+GLFWwindow* window; // GLFW window for rendering
 
-Renderer renderer;
-GLFWwindow* window;
+// Engine Settings
+int wWidth = 1280; // Window width
+int wHeight = 720; // Window height
 
-// Functions
-void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-void mouse_callback(GLFWwindow* window, double xpos, double ypos);
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
-void processInput(GLFWwindow* window);
-void exit();
+// Camera Settings
+bool firstMouse = true; // Initial state for mouse movement logic
 
-// Delta time
-float deltaTime = 0.0f;	// Time between current frame and last frame
+// Time Management
+float deltaTime = 0.0f; // Time between current frame and last frame
 float lastFrame = 0.0f; // Time of last frame
-
-// Settings
-int wWidth = 1280;
-int wHeight = 720;
-
-// Camera 
-bool firstMouse = true;
 
 // Checks for key input
 void processInput(GLFWwindow* window)
@@ -137,32 +131,24 @@ void update() {
     renderer.draw(wWidth, wHeight);
 
     // Update physics for the model
-    if (renderer.model) {
-        float scaledDeltaTime = deltaTime * 0.05f; // Scale down the delta time to slow down the physics
-        renderer.model->physicsObject->update(scaledDeltaTime);
+    if (renderer.model && renderer.model->physicsObject) {
+        float scaledDeltaTime = deltaTime; // Scale down the delta time for smoother physics
 
-        // Collision detection
-        const float groundLevel = renderer.plane->p.y; // Assuming the plane's origin is at its center
-        glm::vec3 modelBottomPoint = renderer.model->p + renderer.model->physicsObject->aabbMin;
+        // Update physics object with the scaled delta time and the current lowest vertex point
+        renderer.model->physicsObject->update(scaledDeltaTime, renderer.model->lowestVertexPoint * renderer.model->s);
+			
+        // Update the model's position based on physics calculations
+		renderer.model->p = renderer.model->physicsObject->position;
+		
 
-        // print ground level
-        // std::cout << "Ground level: " << groundLevel << std::endl;
-        // print model bottom point
-        // std::cout << "Model bottom point: " << modelBottomPoint.x << ", " << modelBottomPoint.y << ", " << modelBottomPoint.z << std::endl;
-        if (modelBottomPoint.y <= groundLevel) {
-            renderer.model->physicsObject->velocity = glm::vec3(0.0f); // Stop the object from moving further
-            renderer.model->p.y = groundLevel - renderer.model->physicsObject->aabbMin.y; // Position the object on top of the ground
-            renderer.model->physicsObject->hasCollided = true; // Flag collision as true
-        }
-        else {
-            renderer.model->update(scaledDeltaTime); // Update the model's position based on physics
-        }
+        // Update the model's transformation matrix with the new position and scale
+        renderer.model->modelMatrix = glm::translate(glm::mat4(1.0f), renderer.model->p) * glm::scale(glm::mat4(1.0f), renderer.model->s);
     }
 
     glfwSwapBuffers(window);
     glfwPollEvents();
 
-    // Optional: "Squish" effect on model, if needed
+    // "Squish" effect on model, if needed
     // renderer.model->s = glm::vec3(0.25f, 0.25f + (glm::abs(glm::sin(currentFrame * 0.0f)) * .025f), 0.25f);
 }
 

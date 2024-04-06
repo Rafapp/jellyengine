@@ -15,6 +15,7 @@
 #include "physics.h"
 
 
+
 using namespace std;
 
 
@@ -36,16 +37,33 @@ void Renderer::setup(float wWidth, float wHeight) {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    model = new Model(RESOURCES_PATH "3D/cube.obj");
-    model->color = glm::vec3(0.0f, 0.5f, 0.0f);
-    model->s = glm::vec3(0.25f);
-    model->p = glm::vec3(0.0f, 1.0f, 0.0f);
-    cout << "COMPLETE::MODEL LOADED" << endl;
+    // ----------------- Set up model -----------------
 
-    // Assuming the cube is 1 unit in size and the model is centered around the origin
-    glm::vec3 scaledAABBMin = glm::vec3(-0.5f, -0.5f, -0.5f) * model->s;
-    glm::vec3 scaledAABBMax = glm::vec3(0.5f, 0.5f, 0.5f) * model->s;
-    model->physicsObject->setAABB(scaledAABBMin, scaledAABBMax);
+    model = new Model(RESOURCES_PATH "3D/cube.obj");
+    model->color = glm::vec3(0.0f, 1.0f, 0.0f);
+    model->s = glm::vec3(0.25f);
+    model->p = glm::vec3(0.0f, 10.0f, 0.0f);
+
+    model->findLowestVertices();
+    model->findHighestVertices();
+
+    // Print out the lowest and highest vertex points of the model before scaling
+    std::cout << "Lowest vertex point: " << model->lowestVertexPoint.x << ", " << model->lowestVertexPoint.y << ", " << model->lowestVertexPoint.z << std::endl;
+    std::cout << "Highest vertex point: " << model->highestVertexPoint.x << ", " << model->highestVertexPoint.y << ", " << model->highestVertexPoint.z << std::endl;
+
+    float scaleAdjustmentFactor = 0.25f;
+    glm::vec3 adjustedLowestVertexPoint = model->lowestVertexPoint * scaleAdjustmentFactor;
+    glm::vec3 adjustedHighestVertexPoint = model->highestVertexPoint * scaleAdjustmentFactor;
+
+    // Print out the lowest and highest vertex points of the model after scaling
+    std::cout << "Adjusted lowest vertex point: " << adjustedLowestVertexPoint.x << ", " << adjustedLowestVertexPoint.y << ", " << adjustedLowestVertexPoint.z << std::endl;
+    std::cout << "Adjusted highest vertex point: " << adjustedHighestVertexPoint.x << ", " << adjustedHighestVertexPoint.y << ", " << adjustedHighestVertexPoint.z << std::endl;
+
+    model->physicsObject->setAABB(adjustedLowestVertexPoint, adjustedHighestVertexPoint);
+
+    std::cout << "COMPLETE::MODEL LOADED" << std::endl;
+
+    // ----------------- Set up model -----------------
 
     light = new Model(RESOURCES_PATH "3D/cube.obj");
     light->color = glm::vec3(1.0f, 1.0f, 1.0f);
@@ -59,9 +77,7 @@ void Renderer::setup(float wWidth, float wHeight) {
     cout << "COMPLETE::PLANE LOADED" << endl;
 
 
-    /*
-    * SHADERS
-    */
+    // Shaders
     mainShader->use();
 
     //Draw wireframe (debugging)
@@ -109,22 +125,7 @@ void Renderer::draw(float wWidth, float wHeight) {
     glUniform1i(boolLoc, 1);
 
     // Render model
-    if (!modelRenderedOnce) {
-        startTime = std::chrono::high_resolution_clock::now();
-        std::time_t start_time = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-        // std::cout << "Starting rendering: Model [Started at " << std::put_time(std::localtime(&start_time), "%F %T") << "]" << std::endl;
-
-        model->draw(*mainShader);  // Render the model
-
-        endTime = std::chrono::high_resolution_clock::now();
-        logRenderTime("Model");
-
-        modelRenderedOnce = true;  // Set the flag to true after the first render
-    }
-    else {
-        // Still render the model but without logging
-        model->draw(*mainShader);
-    }
+    model->draw(*mainShader);
 
     // Send plane position
     glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(plane->getTransform()));

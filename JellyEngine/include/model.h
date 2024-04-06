@@ -20,6 +20,7 @@ public:
     ~Model() {}
 
     glm::vec3 color;
+    glm::mat4 modelMatrix; // model matrix for the model
 
     PhysicsObject* physicsObject; // Use a pointer to avoid circular dependencies
 
@@ -27,14 +28,16 @@ public:
     void update(float deltaTime);
 	void draw(Shader& shader);
 
-private:
     // model data
-    vector<Mesh> meshes; 
+    vector<Mesh> meshes;
     string directory;
 
     void loadModel(string path); // load the model from a file
     void processNode(aiNode* node, const aiScene* scene); // process each node in the model
     Mesh processMesh(aiMesh* mesh, const aiScene* scene); // process each mesh in the model
 
-
+    glm::vec3 lowestVertexPoint;
+    glm::vec3 highestVertexPoint;
+    void findLowestVertices(); // find the lowest vertices in the model
+    void findHighestVertices(); // find the highest vertices in the model
 };

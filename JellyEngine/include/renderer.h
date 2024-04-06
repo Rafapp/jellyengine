@@ -18,7 +18,6 @@ public:
 
 	Camera* camera;
 	Shader* mainShader;
-
 	Model* model;
 	Model* light;
 	Model* plane;

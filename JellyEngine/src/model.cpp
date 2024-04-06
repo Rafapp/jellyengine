@@ -1,4 +1,6 @@
 #include <string>
+#include <limits>
+#include <vector>
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
@@ -9,8 +11,12 @@
 
 void Model::update(float deltaTime) {
     if (physicsObject) {
-        physicsObject->update(deltaTime);
-        this->p = physicsObject->position; // Update Model's position
+        // Pass the lowest point of the model to the physics update
+        physicsObject->update(deltaTime, lowestVertexPoint);
+        // Update the model's position
+        this->p = physicsObject->position;
+        // Set model matrix to new position
+        modelMatrix = glm::translate(glm::mat4(1.0f), p);
     }
 }
 
@@ -32,6 +38,9 @@ void Model::loadModel(string path) {
     directory = path.substr(0, path.find_last_of('/'));
 
     processNode(scene->mRootNode, scene);
+
+    findLowestVertices(); // After model has been loaded, find the lowest vertices
+    findHighestVertices(); // After model has been loaded, find the highest vertices
 }
 
 void Model::processNode(aiNode* node, const aiScene* scene)
@@ -88,12 +97,29 @@ Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene)
 
 Model::Model(char* path) {
     loadModel(path);
+    modelMatrix = glm::mat4(1.0f);
     physicsObject = new PhysicsObject;
     physicsObject->acceleration = glm::vec3(0.0f, -9.81f, 0.0f); // Gravity
-
-    // Set the AABB based on the model's size
-    // For example, if the model is a 1x1x1 cube centered at the origin before any scaling
-    // then the AABB would be from -0.5 to 0.5 in all directions
-    physicsObject->setAABB(glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3(0.5f, 0.5f, 0.5f));
 }
 
+void Model::findLowestVertices() {
+    lowestVertexPoint = glm::vec3(0.0f, std::numeric_limits<float>::max(), 0.0f);
+    for (auto& mesh : meshes) {
+        for (auto& vertex : mesh.vertices) {
+            if (vertex.position.y < lowestVertexPoint.y) {
+                lowestVertexPoint.y = vertex.position.y;
+            }
+        }
+    }
+}
+
+void Model::findHighestVertices() {
+    highestVertexPoint = glm::vec3(0.0f, -std::numeric_limits<float>::max(), 0.0f);
+    for (auto& mesh : meshes) {
+        for (auto& vertex : mesh.vertices) {
+            if (vertex.position.y > highestVertexPoint.y) {
+                highestVertexPoint.y = vertex.position.y;
+            }
+        }
+    }
+}

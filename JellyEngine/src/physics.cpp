@@ -3,45 +3,34 @@
 #include <vector>
 #include "physics.h"
 
-PhysicsObject::PhysicsObject() : position(0.0f, 1.0f, 0.0f), velocity(0.0f), acceleration(0.0f), hasCollided(false) {
-    // Constructor initializes position, velocity, and acceleration to zero
-}
+PhysicsObject::PhysicsObject() : 
+    position(0.0f, 1.0f, 0.0f), 
+    velocity(0.0f), 
+    acceleration(0.0f), 
+    restitution(0.8f),
+    velocityThreshold(0.1f),
+    hasCollided(false) { }
 
-void PhysicsObject::update(float deltaTime) {
-    // The ground plane is at y = -0.25
-    float groundLevel = -0.25f;
-
-    if (hasCollided) {
-        velocity = glm::vec3(0.0f);
-        return;
-    }
-
-    // Update the velocity based on acceleration
+void PhysicsObject::update(float deltaTime, glm::vec3 scaledAABBMin) {
     velocity += acceleration * deltaTime;
+    glm::vec3 nextPosition = position + velocity * deltaTime;
 
-    // Predict the next position
-    glm::vec3 predictedPosition = position + velocity * deltaTime;
-
-    // Calculate the lowest point of the AABB
-    glm::vec3 lowestPoint = predictedPosition + aabbMin;
-    
-    // Print aabbMin.y
-    //std::cout << "aabbMin.y: " << aabbMin.y << std::endl;
-
-    // Print predicted position.y
-    //std::cout << "predictedPosition.y: " << predictedPosition.y << std::endl;
-
-    // Print ground level
-    //std::cout << "Ground level: " << groundLevel << std::endl;
-
-    // Check for collision with the ground
-    if (lowestPoint.y <= groundLevel) {
-        hasCollided = true; // Collision detected
-        position.y = groundLevel - aabbMin.y; // Adjust to sit on ground
-        velocity.y = 0.0f; // Stop downward movement
+    if ((nextPosition.y + scaledAABBMin.y) <= ground) {
+        if (!hasCollided) {  // Only apply restitution on the first collision
+            velocity.y = -velocity.y * restitution;
+            hasCollided = true;
+        }
+        position.y = ground - scaledAABBMin.y;  // Adjust position to sit on the ground
     }
     else {
-        position = predictedPosition; // Update position as no collision occurred
+        hasCollided = false;
+        position = nextPosition;
+    }
+
+    // Apply a damping effect to gradually reduce the bounce over time
+    if (hasCollided && std::abs(velocity.y) < velocityThreshold) {
+        velocity.y = 0;
+        acceleration = glm::vec3(0);
     }
 }
 
