@@ -14,7 +14,7 @@ add_subdirectory("libraries/glad") #opengl loader
 add_subdirectory("libraries/glm") #math
 add_subdirectory("libraries/assimp") #model loading
 
-add_executable (JellyEngine "JellyEngine.cpp" "JellyEngine.h")
+add_executable (JellyEngine "JellyEngine.cpp" "JellyEngine.h" "include/spring.h" "src/spring.cpp")
 
 # Add library names here
 target_link_libraries("${CMAKE_PROJECT_NAME}" PRIVATE glfw glad glm assimp)
