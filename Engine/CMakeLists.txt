@@ -12,4 +12,8 @@ set(SOURCE_FILES
 	src/JellyEngine.cpp
 )
 
-add_library(JellyEngine SHARED ${SOURCE_FILES} ${HEADER_FILES})
+#link libraries here
+#target_include_directories()
+#target_link_libraries()
+
+add_library(JellyEngine STATIC ${SOURCE_FILES} ${HEADER_FILES})

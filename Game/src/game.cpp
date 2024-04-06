@@ -1,9 +1,31 @@
 #include <iostream>
 
+#include "game.h"
+
+class Game:Engine {
+public:
+	//Mesh m;
+	void Start() 
+	{
+		std::cout << "Game initialized" << std::endl;
+	}
+
+	void Update(float dt) 
+	{
+		std::cout << "Running update" << std::endl;
+	}
+
+	void Draw() 
+	{
+		//m.draw();
+	}
+
+	void Exit() 
+	{
+		std::cout << "Exiting game" << std::endl;
+	}
+};
+
 int main() {
-
-	std::cout << "Press any key to continue...";
-	std::cin.get();
-
-	return 0;
+	Engine::InitializeEngine<Game>();
 }
