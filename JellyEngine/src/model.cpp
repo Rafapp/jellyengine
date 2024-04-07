@@ -41,12 +41,6 @@ void Model::loadModel(string path) {
 
     findLowestVertices(); // After model has been loaded, find the lowest vertices
     findHighestVertices(); // After model has been loaded, find the highest vertices
-
-    // After loading each mesh with Assimp, initialize springs
-    for (unsigned int i = 0; i < scene->mNumMeshes; i++) {
-        aiMesh* mesh = scene->mMeshes[i];
-        meshes[i].initSpringsFromAssimpData(std::vector<aiMesh*>{mesh});
-    }
 }
 
 void Model::processNode(aiNode* node, const aiScene* scene)

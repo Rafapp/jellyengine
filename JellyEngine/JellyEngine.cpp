@@ -128,22 +128,24 @@ void update() {
 
     // Move light around
     renderer.light->p = glm::vec3(glm::cos(currentFrame) * 2.5f, 0.5f, glm::sin(currentFrame) * 2.5f);
-    renderer.draw(wWidth, wHeight);
+
 
     // Update physics for the model
+    
     if (renderer.model && renderer.model->physicsObject) {
-        float scaledDeltaTime = deltaTime; // Scale down the delta time for smoother physics
+        float scaledDeltaTime = deltaTime * 0.5f; // Scale down the delta time for smoother physics
 
         // Update physics object with the scaled delta time and the current lowest vertex point
         renderer.model->physicsObject->update(scaledDeltaTime, renderer.model->lowestVertexPoint * renderer.model->s);
-			
+
         // Update the model's position based on physics calculations
-		renderer.model->p = renderer.model->physicsObject->position;
-		
+        renderer.model->p = renderer.model->physicsObject->position;
 
         // Update the model's transformation matrix with the new position and scale
         renderer.model->modelMatrix = glm::translate(glm::mat4(1.0f), renderer.model->p) * glm::scale(glm::mat4(1.0f), renderer.model->s);
     }
+    // Now draw the scene after all updates
+    renderer.draw(wWidth, wHeight);
 
     glfwSwapBuffers(window);
     glfwPollEvents();

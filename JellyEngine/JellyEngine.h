@@ -10,6 +10,7 @@
 #include "camera.h"
 #include "model.h"
 #include "physics.h"
+#include "mesh.h"
 
 // Engine Core
 int setup(); // Engine setup
