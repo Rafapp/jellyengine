@@ -39,12 +39,14 @@ public:
 	vector<Vertex> vertices;
 	vector<unsigned int> indices;
 	vector<Texture> textures;
+	vector<Spring> springs;
 
 	// Constructor should initialize physics properties of vertices
 	Mesh(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures);
 
 	void setup();
 	void draw(Shader& shader);
+	void updateSoftBodyPhysics(float deltaTime);
 
 	unsigned int VAO, VBO, EBO; // Vertex Array Object, Vertex Buffer Object, Element Buffer Object
 };
