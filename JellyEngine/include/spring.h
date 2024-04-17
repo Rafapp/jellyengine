@@ -15,5 +15,5 @@ public:
     Spring(unsigned int pA, unsigned int pB, float rest, float stiff, float damp);
 
     // Calculate the force exerted by this spring
-    glm::vec3 calculateForce(const std::vector<Vertex>& vertices) const;
+    glm::vec3 calculateForce(const glm::vec3& positionA, const glm::vec3& positionB) const;
 };

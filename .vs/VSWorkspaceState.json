@@ -2,10 +2,9 @@
   "ExpandedNodes": [
     "",
     "\\JellyEngine",
-    "\\JellyEngine\\include",
     "\\JellyEngine\\resources",
-    "\\JellyEngine\\resources\\3D",
     "\\JellyEngine\\src"
   ],
+  "SelectedNode": "\\JellyEngine\\CMakeLists.txt",
   "PreviewInSolutionExplorer": false
 }

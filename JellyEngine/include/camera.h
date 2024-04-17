@@ -42,6 +42,9 @@ public:
     // returns the view matrix calculated using Euler Angles and the LookAt Matrix
     glm::mat4 GetViewMatrix();
 
+    // returns the projection matrix calculated using the Zoom value
+    glm::mat4 GetProjectionMatrix(float aspectRatio);
+
     // processes input received from any keyboard-like input system. Accepts input parameter in the form of camera defined ENUM (to abstract it from windowing systems)
     void ProcessKeyboard(Camera_Movement direction, float deltaTime);
 

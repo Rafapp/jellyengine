@@ -22,4 +22,7 @@ public:
     PhysicsObject();
     void update(float deltaTime, glm::vec3 scaledAABBMin);
     void setAABB(const glm::vec3& min, const glm::vec3& max);
+
+    bool manualControlIsActive = false; // If true, the object will not be affected by physics
+
 };

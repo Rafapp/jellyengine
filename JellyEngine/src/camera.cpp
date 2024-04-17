@@ -47,6 +47,9 @@ Camera::Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch) {
 // returns the view matrix calculated using Euler Angles and the LookAt Matrix
 glm::mat4 Camera::GetViewMatrix() { return glm::lookAt(Position, Position + Front, Up); }
 
+// returns the projection matrix calculated using the Zoom value
+glm::mat4 Camera::GetProjectionMatrix(float aspectRatio) { return glm::perspective(glm::radians(Zoom), aspectRatio, 0.1f, 100.0f); }
+
 // processes input received from any keyboard-like input system. Accepts input parameter in the form of camera defined ENUM (to abstract it from windowing systems)
 void Camera::ProcessKeyboard(Camera_Movement direction, float deltaTime) {
 	float velocity = MovementSpeed * deltaTime;

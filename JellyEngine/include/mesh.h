@@ -26,7 +26,7 @@ struct Vertex {
 	float mass;          // Mass of the vertex
 	float restitution;   // Coefficient of restitution for collisions
 	float damping;       // Damping factor to reduce velocity over time
-	bool fixed;          // Indicates if the vertex is fixed in space
+	bool fixed = false;          // Indicates if the vertex is fixed in space
 };
 
 struct Texture {
@@ -46,7 +46,10 @@ public:
 
 	void setup();
 	void draw(Shader& shader);
-	void updateSoftBodyPhysics(float deltaTime);
+	void updateSoftBodyPhysics(float deltaTime, bool manualControlIsActive);
+	void initializePhysicsProperties();
+	void applyModelPosition(glm::vec3 modelPosition);
+	void applyModelScale(glm::vec3 modelScale);
 
 	unsigned int VAO, VBO, EBO; // Vertex Array Object, Vertex Buffer Object, Element Buffer Object
 };

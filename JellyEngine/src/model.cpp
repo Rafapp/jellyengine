@@ -9,14 +9,9 @@
 #include "model.h"
 #include "physics.h"
 
-void Model::update(float deltaTime) {
-    if (physicsObject) {
-        // Pass the lowest point of the model to the physics update
-        physicsObject->update(deltaTime, lowestVertexPoint);
-        // Update the model's position
-        this->p = physicsObject->position;
-        // Set model matrix to new position
-        modelMatrix = glm::translate(glm::mat4(1.0f), p);
+void Model::update(float deltaTime, bool manualControlIsActive) {
+    for (auto& mesh : meshes) {
+        mesh.updateSoftBodyPhysics(deltaTime, manualControlIsActive);
     }
 }
 
@@ -98,8 +93,6 @@ Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene)
 Model::Model(char* path) {
     loadModel(path);
     modelMatrix = glm::mat4(1.0f);
-    physicsObject = new PhysicsObject;
-    physicsObject->acceleration = glm::vec3(0.0f, -9.81f, 0.0f); // Gravity
 }
 
 void Model::findLowestVertices() {
@@ -122,4 +115,14 @@ void Model::findHighestVertices() {
             }
         }
     }
+}
+
+void Model::printVertices() {
+	int vertexNumber = 0;
+    for (auto& mesh : meshes) {
+        for (auto& vertex : mesh.vertices) {
+			cout << "Vertex " << vertexNumber << ": " << vertex.position.x << ", " << vertex.position.y << ", " << vertex.position.z << endl;
+			vertexNumber++;
+		}
+	}
 }

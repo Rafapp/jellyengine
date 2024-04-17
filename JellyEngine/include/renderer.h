@@ -22,6 +22,10 @@ public:
 	Model* light;
 	Model* plane;
 
+	// Model properties
+	glm::vec3 adjustedLowestVertexPoint;
+	glm::vec3 adjustedHighestVertexPoint;
+
 	// Timer variables
 	void logRenderTime(const std::string& objectName);
 	std::chrono::time_point<std::chrono::high_resolution_clock> startTime;

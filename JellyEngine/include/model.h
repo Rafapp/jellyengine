@@ -25,7 +25,7 @@ public:
     PhysicsObject* physicsObject; // Use a pointer to avoid circular dependencies
 
 
-    void update(float deltaTime);
+    void update(float deltaTime, bool manualControlIsActive);
 	void draw(Shader& shader);
 
     // model data
@@ -40,4 +40,5 @@ public:
     glm::vec3 highestVertexPoint;
     void findLowestVertices(); // find the lowest vertices in the model
     void findHighestVertices(); // find the highest vertices in the model
+    void printVertices(); // print the vertices of the model
 };

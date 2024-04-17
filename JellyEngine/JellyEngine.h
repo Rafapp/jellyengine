@@ -23,6 +23,9 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos); // Mouse move
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset); // Scroll callback
 void processInput(GLFWwindow* window); // Input processing
 static void error_callback(int error, const char* description); // Error callback
+static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods); // Mouse button callback
+glm::vec2 convertScreenToWorldCoords(double x, double y); // Convert screen coordinates to world coordinates
+
 
 // Utility Functions
 std::vector<Vertex> modelToVertices(Model& model); // Convert model data to vertices

@@ -5,27 +5,16 @@ Spring::Spring(unsigned int pA, unsigned int pB, float rest, float stiff, float 
     : pointA(pA), pointB(pB), restLength(rest), stiffness(stiff), damping(damp) {}
 
 // Calculate the force exerted by this spring
-glm::vec3 Spring::calculateForce(const std::vector<Vertex>& vertices) const {
-    // Access the positions of the pointA and pointB using their indices
-    const glm::vec3& positionA = vertices[pointA].position;
-    const glm::vec3& positionB = vertices[pointB].position;
-
-    // Compute the vector from pointA to pointB
+glm::vec3 Spring::calculateForce(const glm::vec3& positionA, const glm::vec3& positionB) const {
     glm::vec3 springVector = positionB - positionA;
-
-    // Calculate the displacement from the rest length
     float currentLength = glm::length(springVector);
-    float displacement = currentLength - restLength;
+    glm::vec3 force = glm::vec3(0.0f);
 
-    // Normalize the spring vector to get the direction
-    glm::vec3 direction = glm::normalize(springVector);
-
-    // Calculate the force using Hooke's law
-    glm::vec3 force = -stiffness * displacement * direction;
-
-    // Damping based on the relative velocity of the two points
-    glm::vec3 relativeVelocity = vertices[pointB].velocity - vertices[pointA].velocity;
-    force -= damping * relativeVelocity;
+    if (currentLength != 0) {
+        glm::vec3 direction = glm::normalize(springVector);
+        float displacement = currentLength - restLength;
+        force = -stiffness * displacement * direction;
+    }
 
     return force;
 }

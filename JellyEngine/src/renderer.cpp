@@ -39,27 +39,37 @@ void Renderer::setup(float wWidth, float wHeight) {
 
     // ----------------- Set up model -----------------
 
-    model = new Model(RESOURCES_PATH "3D/cube.obj");
+    model = new Model(RESOURCES_PATH "3D/quad.obj");
     model->color = glm::vec3(0.0f, 1.0f, 0.0f);
     model->s = glm::vec3(0.25f);
-    model->p = glm::vec3(0.0f, 10.0f, 0.0f);
+    model->p = glm::vec3(0.0f, 1.0f, 0.0f);
 
-    model->findLowestVertices();
-    model->findHighestVertices();
+    // Now apply the model's position to the vertices
+    for (auto& mesh : model->meshes) {
+        mesh.applyModelPosition(model->p);
+    }
+
+    // Now apply the model's scale to the vertices
+    for (auto& mesh : model->meshes) {
+		mesh.applyModelScale(model->s);
+	}
+
+    // model->findLowestVertices();
+    // model->findHighestVertices();
+    // model->printVertices();
 
     // Print out the lowest and highest vertex points of the model before scaling
-    std::cout << "Lowest vertex point: " << model->lowestVertexPoint.x << ", " << model->lowestVertexPoint.y << ", " << model->lowestVertexPoint.z << std::endl;
-    std::cout << "Highest vertex point: " << model->highestVertexPoint.x << ", " << model->highestVertexPoint.y << ", " << model->highestVertexPoint.z << std::endl;
-
-    float scaleAdjustmentFactor = 0.25f;
-    glm::vec3 adjustedLowestVertexPoint = model->lowestVertexPoint * scaleAdjustmentFactor;
-    glm::vec3 adjustedHighestVertexPoint = model->highestVertexPoint * scaleAdjustmentFactor;
+    // std::cout << "Lowest vertex point: " << model->lowestVertexPoint.x << ", " << model->lowestVertexPoint.y << ", " << model->lowestVertexPoint.z << std::endl;
+    // std::cout << "Highest vertex point: " << model->highestVertexPoint.x << ", " << model->highestVertexPoint.y << ", " << model->highestVertexPoint.z << std::endl
+    adjustedLowestVertexPoint = model->lowestVertexPoint * model->s;
+    adjustedHighestVertexPoint = model->highestVertexPoint * model->s;
 
     // Print out the lowest and highest vertex points of the model after scaling
-    std::cout << "Adjusted lowest vertex point: " << adjustedLowestVertexPoint.x << ", " << adjustedLowestVertexPoint.y << ", " << adjustedLowestVertexPoint.z << std::endl;
-    std::cout << "Adjusted highest vertex point: " << adjustedHighestVertexPoint.x << ", " << adjustedHighestVertexPoint.y << ", " << adjustedHighestVertexPoint.z << std::endl;
+    // std::cout << "Adjusted lowest vertex point: " << adjustedLowestVertexPoint.x << ", " << adjustedLowestVertexPoint.y << ", " << adjustedLowestVertexPoint.z << std::endl;
+    // std::cout << "Adjusted highest vertex point: " << adjustedHighestVertexPoint.x << ", " << adjustedHighestVertexPoint.y << ", " << adjustedHighestVertexPoint.z << std::endl;
 
-    model->physicsObject->setAABB(adjustedLowestVertexPoint, adjustedHighestVertexPoint);
+    // Set the AABB of the model
+    // model->physicsObject->setAABB(adjustedLowestVertexPoint, adjustedHighestVertexPoint);
 
     std::cout << "COMPLETE::MODEL LOADED" << std::endl;
 
@@ -115,14 +125,14 @@ void Renderer::draw(float wWidth, float wHeight) {
     light->draw(*mainShader);
 
     // TODO: For loop the hell out of the stuff under here with a vector and Scene
-    glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(model->getTransform()));
-    glUniformMatrix4fv(modelViewLoc, 1, GL_FALSE, glm::value_ptr(view));
-    glUniformMatrix4fv(modelProjectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
+    glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(model->modelMatrix)); // Send model matrix
+    glUniformMatrix4fv(modelViewLoc, 1, GL_FALSE, glm::value_ptr(view)); // Send view matrix
+    glUniformMatrix4fv(modelProjectionLoc, 1, GL_FALSE, glm::value_ptr(projection)); // Send projection matrix
     
     // Send model data
-    glUniform3f(colorLoc, model->color.x, model->color.y, model->color.z);
-    glUniform3f(modelViewPosLoc, camera->Position.x, camera->Position.y, camera->Position.z);
-    glUniform1i(boolLoc, 1);
+    glUniform3f(colorLoc, model->color.x, model->color.y, model->color.z); // Send model color
+    glUniform3f(modelViewPosLoc, camera->Position.x, camera->Position.y, camera->Position.z); // Send camera position
+    glUniform1i(boolLoc, 1); // Enable lighting calculations
 
     // Render model
     model->draw(*mainShader);
@@ -139,9 +149,6 @@ void Renderer::draw(float wWidth, float wHeight) {
 
     // Render plane
     plane->draw(*mainShader);
-
-    // Calculate and display the FPS
-    // calculateAndDisplayFPS();
 }
 
 void Renderer::logRenderTime(const std::string& objectName) {

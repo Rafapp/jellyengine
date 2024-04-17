@@ -28,22 +28,66 @@ bool firstMouse = true; // Initial state for mouse movement logic
 float deltaTime = 0.0f; // Time between current frame and last frame
 float lastFrame = 0.0f; // Time of last frame
 
+// Define global variables for mouse control
+bool cameraControlEnabled = true;  // Default to camera control enabled
+bool manualControlIsActive = false; // Default to manual control disabled
+int selectedVertexIndex = -1; // Default to no selected vertex
+bool isCToggled = false; // Default to camera control disabled
+
 // Checks for key input
 void processInput(GLFWwindow* window)
 {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
 
-    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-        renderer.camera->ProcessKeyboard(FORWARD, deltaTime);
-    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-        renderer.camera->ProcessKeyboard(BACKWARD, deltaTime);
-    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-        renderer.camera->ProcessKeyboard(LEFT, deltaTime);
-    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-        renderer.camera->ProcessKeyboard(RIGHT, deltaTime);
-    if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS)
-        renderer.camera->ResetPosition();
+    // Toggle camera control
+    if (glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS && !isCToggled) {
+        cameraControlEnabled = !cameraControlEnabled;
+        glfwSetInputMode(window, GLFW_CURSOR, cameraControlEnabled ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL);
+        isCToggled = true;  // Prevent further toggling until the key is released
+    }
+    else if (glfwGetKey(window, GLFW_KEY_C) == GLFW_RELEASE) {
+        isCToggled = false;  // Allow toggling again after the key is released
+    }
+
+    if (cameraControlEnabled) {
+        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+            renderer.camera->ProcessKeyboard(FORWARD, deltaTime);
+        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+            renderer.camera->ProcessKeyboard(BACKWARD, deltaTime);
+        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+            renderer.camera->ProcessKeyboard(LEFT, deltaTime);
+        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+            renderer.camera->ProcessKeyboard(RIGHT, deltaTime);
+        if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS)
+            renderer.camera->ResetPosition();
+    }
+
+    manualControlIsActive = glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS ||
+        glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS ||
+        glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS ||
+        glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS;
+
+    if (manualControlIsActive) {
+        float moveSpeed = 2.0f;
+        for (auto& mesh : renderer.model->meshes) {
+            for (auto& vertex : mesh.vertices) {
+                if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+                    vertex.position.y += moveSpeed * deltaTime;
+                if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+                    vertex.position.y -= moveSpeed * deltaTime;
+                if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+                    vertex.position.x -= moveSpeed * deltaTime;
+                if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+                    vertex.position.x += moveSpeed * deltaTime;
+            }
+        }
+    }
+
+     // After processing input, update mesh physics considering the manual control flag
+     for (auto& mesh : renderer.model->meshes) {
+         mesh.updateSoftBodyPhysics(deltaTime, manualControlIsActive);
+     }
 }
 
 // Callbacks a glfw error
@@ -92,6 +136,7 @@ int setup() {
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     glfwSetCursorPosCallback(window, mouse_callback);
     glfwSetScrollCallback(window, scroll_callback);
+    glfwSetMouseButtonCallback(window, mouse_button_callback);
     
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
@@ -129,24 +174,17 @@ void update() {
     // Move light around
     renderer.light->p = glm::vec3(glm::cos(currentFrame) * 2.5f, 0.5f, glm::sin(currentFrame) * 2.5f);
 
-
-    // Update physics for the model
+    float scaledDeltaTime = deltaTime * 0.05f; // Scale down the delta time for smoother physics
     
-    if (renderer.model && renderer.model->physicsObject) {
-        float scaledDeltaTime = deltaTime * 0.5f; // Scale down the delta time for smoother physics
-
-        // Update physics object with the scaled delta time and the current lowest vertex point
-        renderer.model->physicsObject->update(scaledDeltaTime, renderer.model->lowestVertexPoint * renderer.model->s);
-
-        // Update the model's position based on physics calculations
-        renderer.model->p = renderer.model->physicsObject->position;
-
-        // Update the model's transformation matrix with the new position and scale
-        renderer.model->modelMatrix = glm::translate(glm::mat4(1.0f), renderer.model->p) * glm::scale(glm::mat4(1.0f), renderer.model->s);
+    // Apply gravity and collision detection at the mesh (vertex) level
+    for (auto& mesh : renderer.model->meshes) {
+        mesh.updateSoftBodyPhysics(scaledDeltaTime, manualControlIsActive);
     }
+
+    renderer.model->modelMatrix = glm::translate(glm::mat4(1.0f), renderer.model->p) * glm::scale(glm::mat4(1.0f), renderer.model->s);
+    
     // Now draw the scene after all updates
     renderer.draw(wWidth, wHeight);
-
     glfwSwapBuffers(window);
     glfwPollEvents();
 
@@ -206,4 +244,33 @@ void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
     renderer.camera->ProcessMouseScroll(static_cast<float>(yoffset));
+}
+
+// Define the mouse button callback
+void mouse_button_callback(GLFWwindow* window, int button, int action, int mods) {
+    if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
+        // This is where you would determine which vertex the mouse is over, for simplicity here, toggle first vertex
+        selectedVertexIndex = (selectedVertexIndex == -1) ? 0 : -1;
+    }
+}
+
+// Define the conversion function (you'll need to implement this based on your view/projection)
+glm::vec2 convertScreenToWorldCoords(double x, double y) {
+    // Convert screen coordinates to normalized device coordinates
+    float ndcX = (2.0f * x) / wWidth - 1.0f;
+    float ndcY = 1.0f - (2.0f * y) / wHeight;
+    glm::vec4 clipCoords = glm::vec4(ndcX, ndcY, -1.0f, 1.0f);
+
+    // Get the view-projection matrix from the camera
+    glm::mat4 projection = renderer.camera->GetProjectionMatrix(static_cast<float>(wWidth) / static_cast<float>(wHeight));
+    glm::mat4 view = renderer.camera->GetViewMatrix();
+    glm::mat4 viewProjection = projection * view;
+
+    // Now invert the view-projection matrix
+    glm::mat4 invVP = glm::inverse(viewProjection);
+    glm::vec4 worldCoords = invVP * clipCoords;
+    worldCoords /= worldCoords.w; // Perspective divide
+
+    // Since we're working with a 2D quad in a 3D space, we don't need the z coordinate
+    return glm::vec2(worldCoords.x, worldCoords.y);
 }
