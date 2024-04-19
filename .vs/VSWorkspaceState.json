@@ -2,9 +2,11 @@
   "ExpandedNodes": [
     "",
     "\\JellyEngine",
+    "\\JellyEngine\\include",
     "\\JellyEngine\\resources",
+    "\\JellyEngine\\resources\\shaders",
     "\\JellyEngine\\src"
   ],
-  "SelectedNode": "\\JellyEngine\\CMakeLists.txt",
+  "SelectedNode": "\\JellyEngine\\resources\\shaders\\shader.vert",
   "PreviewInSolutionExplorer": false
 }

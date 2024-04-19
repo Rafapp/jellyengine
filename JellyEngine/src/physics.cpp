@@ -13,21 +13,7 @@ PhysicsObject::PhysicsObject() :
     hasCollided(false) { }
 
 void PhysicsObject::update(float deltaTime, glm::vec3 scaledAABBMin) {
-    if (!manualControlIsActive) {
-        // glm::vec3 nextPosition = position + velocity * deltaTime;
-
-        // Check collision with the ground
-        //if ((nextPosition.y + scaledAABBMin.y) <= ground) {
-            // position.y = ground - scaledAABBMin.y; // Adjust position to ground level
-            // hasCollided = true; // Mark as collided
-        // }
-        // else {
-            // position = nextPosition; // Update position if no collision
-            // hasCollided = false;
-        // }
-    }
-    // Reset manual control flag for next frame
-    manualControlIsActive = false;
+    // Current removed for simplicity
 }
 
 void PhysicsObject::setAABB(const glm::vec3& min, const glm::vec3& max) {

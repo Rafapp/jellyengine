@@ -27,12 +27,9 @@ bool firstMouse = true; // Initial state for mouse movement logic
 // Time Management
 float deltaTime = 0.0f; // Time between current frame and last frame
 float lastFrame = 0.0f; // Time of last frame
-
-// Define global variables for mouse control
-bool cameraControlEnabled = true;  // Default to camera control enabled
 bool manualControlIsActive = false; // Default to manual control disabled
-int selectedVertexIndex = -1; // Default to no selected vertex
-bool isCToggled = false; // Default to camera control disabled
+int selectedVertexIndex = 0; // Default to no selected vertex
+bool isMToggled = false; // Default to manual control disabled
 
 // Checks for key input
 void processInput(GLFWwindow* window)
@@ -40,17 +37,6 @@ void processInput(GLFWwindow* window)
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
 
-    // Toggle camera control
-    if (glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS && !isCToggled) {
-        cameraControlEnabled = !cameraControlEnabled;
-        glfwSetInputMode(window, GLFW_CURSOR, cameraControlEnabled ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL);
-        isCToggled = true;  // Prevent further toggling until the key is released
-    }
-    else if (glfwGetKey(window, GLFW_KEY_C) == GLFW_RELEASE) {
-        isCToggled = false;  // Allow toggling again after the key is released
-    }
-
-    if (cameraControlEnabled) {
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
             renderer.camera->ProcessKeyboard(FORWARD, deltaTime);
         if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
@@ -61,33 +47,47 @@ void processInput(GLFWwindow* window)
             renderer.camera->ProcessKeyboard(RIGHT, deltaTime);
         if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS)
             renderer.camera->ResetPosition();
+    
+
+    // Toggle manual control
+    if (glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS && !isMToggled) {
+        manualControlIsActive = !manualControlIsActive;
+        isMToggled = true;  // Prevent further toggling until the key is released
+        std::cout << "Manual control is inactive" << std::endl;
+    }
+    if (glfwGetKey(window, GLFW_KEY_M) == GLFW_RELEASE) {
+        isMToggled = false;
     }
 
-    manualControlIsActive = glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS ||
-        glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS ||
-        glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS ||
-        glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS;
+    // Move the selected vertex
+    if (manualControlIsActive && selectedVertexIndex != -1) {
+        float moveSpeed = 1.0f; // Speed at which the vertex will move
 
-    if (manualControlIsActive) {
-        float moveSpeed = 2.0f;
-        for (auto& mesh : renderer.model->meshes) {
-            for (auto& vertex : mesh.vertices) {
-                if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
-                    vertex.position.y += moveSpeed * deltaTime;
-                if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
-                    vertex.position.y -= moveSpeed * deltaTime;
-                if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
-                    vertex.position.x -= moveSpeed * deltaTime;
-                if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
-                    vertex.position.x += moveSpeed * deltaTime;
-            }
+        Vertex& vertex = renderer.model->meshes[0].vertices[selectedVertexIndex];
+
+        if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
+            vertex.position.y += moveSpeed * deltaTime;
+            std::cout << "UP" << std::endl;
         }
+        if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
+            vertex.position.y -= moveSpeed * deltaTime;
+            std::cout << "DOWN" << std::endl;
+        }
+        if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
+            std::
+        }
+        if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+            vertex.position.x += moveSpeed * deltaTime;
+
+        // Print the position of that vertex along with the vertex number
+        std::cout << "Vertex " << selectedVertexIndex << ": " << vertex.position.x << ", " << vertex.position.y << ", " << vertex.position.z << std::endl;
+
+        // Update the OpenGL buffer for the modified vertex
+        glBindBuffer(GL_ARRAY_BUFFER, renderer.model->meshes[0].VBO); // Bind the VBO
+        glBufferSubData(GL_ARRAY_BUFFER, renderer.model->meshes[0].vertices.size(), sizeof(Vertex), &vertex); // Update the buffer`
+        glBindBuffer(GL_ARRAY_BUFFER, 0); // Unbind the VBO
     }
 
-     // After processing input, update mesh physics considering the manual control flag
-     for (auto& mesh : renderer.model->meshes) {
-         mesh.updateSoftBodyPhysics(deltaTime, manualControlIsActive);
-     }
 }
 
 // Callbacks a glfw error
@@ -174,14 +174,12 @@ void update() {
     // Move light around
     renderer.light->p = glm::vec3(glm::cos(currentFrame) * 2.5f, 0.5f, glm::sin(currentFrame) * 2.5f);
 
-    float scaledDeltaTime = deltaTime * 0.05f; // Scale down the delta time for smoother physics
-    
-    // Apply gravity and collision detection at the mesh (vertex) level
-    for (auto& mesh : renderer.model->meshes) {
-        mesh.updateSoftBodyPhysics(scaledDeltaTime, manualControlIsActive);
-    }
+    // ----------------- Update physics -----------------
 
-    renderer.model->modelMatrix = glm::translate(glm::mat4(1.0f), renderer.model->p) * glm::scale(glm::mat4(1.0f), renderer.model->s);
+    // Update the model matrix based on the model's position and scale
+    renderer.model->modelMatrix = glm::translate(glm::mat4(1.0f), renderer.model->p)
+       * glm::scale(glm::mat4(1.0f), renderer.model->s);
+
     
     // Now draw the scene after all updates
     renderer.draw(wWidth, wHeight);

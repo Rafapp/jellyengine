@@ -42,7 +42,7 @@ void Renderer::setup(float wWidth, float wHeight) {
     model = new Model(RESOURCES_PATH "3D/quad.obj");
     model->color = glm::vec3(0.0f, 1.0f, 0.0f);
     model->s = glm::vec3(0.25f);
-    model->p = glm::vec3(0.0f, 1.0f, 0.0f);
+    model->p = glm::vec3(0.0f, 0.0f, 0.0f);
 
     // Now apply the model's position to the vertices
     for (auto& mesh : model->meshes) {
@@ -53,6 +53,9 @@ void Renderer::setup(float wWidth, float wHeight) {
     for (auto& mesh : model->meshes) {
 		mesh.applyModelScale(model->s);
 	}
+
+    // Print out initial vertices of the model
+    model->printVertices();
 
     // model->findLowestVertices();
     // model->findHighestVertices();
@@ -101,9 +104,13 @@ void Renderer::draw(float wWidth, float wHeight) {
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    mainShader->use();
+
     // Projection and View matrix setup
     glm::mat4 projection = glm::perspective(glm::radians(camera->Zoom), (float)wWidth / (float)wHeight, 0.1f, 100.0f);
     glm::mat4 view = camera->GetViewMatrix();
+    mainShader->setMat4("projection", projection);
+    mainShader->setMat4("view", view);
 
     // Uniforms
     int transformLoc = glGetUniformLocation(mainShader->ID, "transform");
@@ -135,7 +142,11 @@ void Renderer::draw(float wWidth, float wHeight) {
     glUniform1i(boolLoc, 1); // Enable lighting calculations
 
     // Render model
-    model->draw(*mainShader);
+    // model->draw(*mainShader);
+
+    glm::mat4 modelTransform = model->getTransform(); // Get transformation matrix
+    mainShader->setMat4("transform", modelTransform);
+    model->draw(*mainShader); // Draw model
 
     // Send plane position
     glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(plane->getTransform()));

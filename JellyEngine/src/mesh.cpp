@@ -49,31 +49,15 @@ void Mesh::setup() {
 
 void Mesh::draw(Shader& shader) {
     // draw mesh
-    glBindVertexArray(VAO);
-    glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
-    glBindVertexArray(0);
+    glBindVertexArray(VAO); // Bind the VAO
+    glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0); // Draw the mesh
+    glBindVertexArray(0); // Unbind the VAO
 }
 
 void Mesh::updateSoftBodyPhysics(float deltaTime, bool manualControlIsActive) {
     if (!manualControlIsActive) {
-        glm::vec3 gravity(0.0f, -9.81f, 0.0f);
-        for (auto& vertex : vertices) {
-            if (!vertex.fixed) {
-                // Apply gravity
-                vertex.velocity += gravity * deltaTime;
-                vertex.velocity *= vertex.damping;  // Damping factor to simulate air resistance
-                vertex.position += vertex.velocity * deltaTime;
-            }
-        }
+        return;
     }
-
-    // Print a single vertex position for debugging
-    cout << "Vertex position: " << vertices[0].position.x << ", " << vertices[0].position.y << ", " << vertices[0].position.z << endl;
-
-     // After physics updates, bind the vertex buffer and update it with the new vertex positions
-     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-     glBufferSubData(GL_ARRAY_BUFFER, 0, vertices.size() * sizeof(Vertex), &vertices[0]);
-     glBindBuffer(GL_ARRAY_BUFFER, 0); // Unbind the buffer
 }
 
 void Mesh::initializePhysicsProperties() {
