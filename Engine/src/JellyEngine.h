@@ -12,10 +12,11 @@
 
 namespace Renderer {
 	void Setup();
+	void Draw();
 }
 
 // Window settings
-GLFWwindow* window;
+static GLFWwindow* window;
 int wWidth = 1280;
 int wHeight = 720;
 
@@ -23,14 +24,15 @@ int wHeight = 720;
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
-void processInput(GLFWwindow* window);
+static void processInput(GLFWwindow* window);
 static void error_callback(int error, const char* description);
 
 // Engine
 class Engine {
 public:
 	template<typename Game>
-	static void InitializeEngine() {
+	static int InitializeEngine() {
+		// Initialization
 		std::cout << "JELLY ENGINE: VERSION 1.0.0" << std::endl;
 		std::cout << "Starting ..." << std::endl;
 
@@ -71,31 +73,50 @@ public:
 
 		std::cout << "COMPLETE::JELLY ENGINE SETUP" << std::endl;
 
-		/*
-		Renderer::Setup();
-
 		Game game;
 		game.Start();
 
-		std::cout << "Press any key to continue...";
-		std::cin.get();
-		int i = 0;
-		// GLFW loop
-		while (true) {
-			float dt = 0;
+		// Update
+		while (!glfwWindowShouldClose(window))
+		{
+			static float dt = 0.0;
+			static float lastFrame = 0.0;
+			static float currentFrame = 0.0;
+
+			currentFrame = glfwGetTime();
+			dt = currentFrame - lastFrame;
+			lastFrame = currentFrame;
+
+			processInput(window);
+
 			game.Update(dt);
-			game.Draw();
-			i++;
-			if (i > 10) break;
 		}
-		game.Exit();
-		*/
 	}
 	virtual void Start() = 0;
 	virtual void Update(float dt) = 0;
 	virtual void Exit() = 0;
 	virtual void Draw() = 0;
 };
+
+/*
+ * INPUT
+ */
+void processInput(GLFWwindow* window)
+{
+	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+		glfwSetWindowShouldClose(window, true);
+
+	//if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+	//	renderer.camera->ProcessKeyboard(FORWARD, deltaTime);
+	//if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+	//	renderer.camera->ProcessKeyboard(BACKWARD, deltaTime);
+	//if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+	//	renderer.camera->ProcessKeyboard(LEFT, deltaTime);
+	//if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+	//	renderer.camera->ProcessKeyboard(RIGHT, deltaTime);
+	//if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS)
+	//	renderer.camera->ResetPosition();
+}
 
 /*
  * CALLBACKS
@@ -106,18 +127,18 @@ static void error_callback(int error, const char* description)
 	fprintf(stderr, "Error: %s\n", description);
 }
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+static void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
 	glViewport(0, 0, width, height);
 }
 
-void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
+static void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 {
 	float xpos = static_cast<float>(xposIn);
 	float ypos = static_cast<float>(yposIn);
 }
 
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
 
 }

@@ -2,7 +2,7 @@
 
 #include "game.h"
 
-class Game:Engine {
+class Game : Engine {
 public:
 	//Mesh m;
 	void Start() 
@@ -12,7 +12,7 @@ public:
 
 	void Update(float dt) 
 	{
-		std::cout << "Running update" << std::endl;
+		std::cout << "Running update: " << dt << std::endl;
 	}
 
 	void Draw() 

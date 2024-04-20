@@ -15,12 +15,12 @@ set(SOURCE_FILES
 add_library(JellyEngine STATIC ${SOURCE_FILES} ${HEADER_FILES})
 
 # Library headers
-target_include_directories(JellyEngine PRIVATE "libraries/glad/include")
-target_include_directories(JellyEngine PRIVATE "libraries/glfw/include")
+target_include_directories(JellyEngine PUBLIC "libraries/glad/include")
+target_include_directories(JellyEngine PUBLIC "libraries/glfw/include")
 
 # Cmake library header subdirectories
 add_subdirectory("libraries/glad") # opengl loader
 add_subdirectory("libraries/glfw") # window and input mgmt
 
-target_link_libraries("${CMAKE_PROJECT_NAME}" PRIVATE glad glfw)
+target_link_libraries(JellyEngine PUBLIC glad glfw)
 
