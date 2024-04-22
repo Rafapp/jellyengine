@@ -5,11 +5,13 @@ project(JellyEngine)
 set(CMAKE_CXX_STANDARD 20)
 
 set(HEADER_FILES
-	src/JellyEngine.h
+	src/jellyEngine.h
+	src/input.h
 )
 
 set(SOURCE_FILES
-	src/JellyEngine.cpp
+	src/jellyEngine.cpp
+	src/input.cpp
 )
 
 add_library(JellyEngine STATIC ${SOURCE_FILES} ${HEADER_FILES})
@@ -17,10 +19,12 @@ add_library(JellyEngine STATIC ${SOURCE_FILES} ${HEADER_FILES})
 # Library headers
 target_include_directories(JellyEngine PUBLIC "libraries/glad/include")
 target_include_directories(JellyEngine PUBLIC "libraries/glfw/include")
+target_include_directories(JellyEngine PUBLIC "libraries/glm")
 
 # Cmake library header subdirectories
 add_subdirectory("libraries/glad") # opengl loader
 add_subdirectory("libraries/glfw") # window and input mgmt
+add_subdirectory("libraries/glm") # math
 
-target_link_libraries(JellyEngine PUBLIC glad glfw)
+target_link_libraries(JellyEngine PUBLIC glad glfw glm)
 
