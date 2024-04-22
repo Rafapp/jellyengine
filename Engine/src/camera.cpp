@@ -14,7 +14,7 @@ using namespace std;
 Camera::Camera() {
 
 	// World values
-	Position = glm::vec3(0.0f, 0.0f, 0.0f);
+	Position = glm::vec3(1.0f, 0.0f, 1.0f);
 	WorldUp = glm::vec3(0.0f, 1.0f, 0.0f);
 	Yaw = -90.0f;
 	Pitch = 0.0f;
@@ -81,10 +81,12 @@ void Camera::ProcessMouseMovement(float xoffset, float yoffset, bool constrainPi
 
 	// update Front, Right and Up Vectors using the updated Euler angles
 	updateCameraVectors();
+	std::cout << Pitch << std::endl;
 }
 
 // processes input received from a mouse scroll-wheel event. Only requires input on the vertical wheel-axis
 void Camera::ProcessMouseScroll(float y) {
+	std::cout << "Processing mouse scroll" << std::endl;
 	Zoom -= (float)y;
 	if (Zoom < 1.0f)
 		Zoom = 1.0f;

@@ -9,12 +9,12 @@
 #include "model.h"
 
 namespace Renderer {
-	static Camera* camera;
-	static Shader* shader;
-	static Model* model;
-	static Model* light;
-	static Model* plane;
+	extern Camera* camera;
+	extern Shader* shader;
+	extern Model* model;
+	extern Model* light;
+	extern Model* plane;
 
-	static void Setup();
-	static void Draw();
+	void Setup();
+	void Draw();
 }

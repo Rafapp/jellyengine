@@ -60,8 +60,8 @@ public:
 		glfwSetCursorPosCallback(window, mouse_callback);
 		glfwSetScrollCallback(window, scroll_callback);
 
-		// Uncomment this if you'd like to show the mouse
-		// glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+		// TODO: Make mouse locking a game.cpp feature
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 		if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
 			std::cout << "Failed to initialize GLAD" << std::endl;
@@ -74,7 +74,7 @@ public:
 		std::cout << std::endl;
 
 		std::cout << "INITIALIZING::RENDERER SETUP ..." << std::endl;
-		RendererSetup();
+		Renderer::Setup();
 		std::cout << "COMPLETE::RENDERER SETUP" << std::endl;
 		std::cout << std::endl;
 
@@ -92,13 +92,13 @@ public:
 			lastFrame = currentFrame;
 
 			// Update the camera
-			/*if (keyPressed("w")) Renderer::camera->ProcessKeyboard(FORWARD, dt);
-			if (keyPressed("a")) Renderer::camera->ProcessKeyboard(FORWARD, dt);
-			if (keyPressed("s")) Renderer::camera->ProcessKeyboard(FORWARD, dt);
-			if (keyPressed("d")) Renderer::camera->ProcessKeyboard(FORWARD, dt);
-			if (keyPressed("r")) Renderer::camera->ResetPosition();*/
+			if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) Renderer::camera->ProcessKeyboard(FORWARD, dt);
+			if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) Renderer::camera->ProcessKeyboard(LEFT, dt);
+			if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) Renderer::camera->ProcessKeyboard(BACKWARD, dt);
+			if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) Renderer::camera->ProcessKeyboard(RIGHT, dt);
+			if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) Renderer::camera->ResetPosition();
 
-			RendererDraw();
+			Renderer::Draw();
 
 			glfwSwapBuffers(window);
 			glfwPollEvents();
@@ -127,18 +127,31 @@ static void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 	glViewport(0, 0, width, height);
 }
 
+static bool firstMouse = true;
 static void mouse_callback(GLFWwindow* window, double x, double y) {
 	mouseX = static_cast<float>(x);
 	mouseY = static_cast<float>(y);
-	// FIX: Renderer::camera is nullptr
-	//Renderer::camera->ProcessMouseMovement(x, y);
+
+	if (firstMouse)
+	{
+		Renderer::camera->lastX = mouseX;
+		Renderer::camera->lastY = mouseY;
+		firstMouse = false;
+	}
+
+	float xoffset = mouseX - Renderer::camera->lastX;
+	float yoffset = Renderer::camera->lastY - mouseY; // reversed since y-coordinates go from bottom to top
+
+	Renderer::camera->lastX = mouseX;
+	Renderer::camera->lastY = mouseY;
+
+	Renderer::camera->ProcessMouseMovement(xoffset, yoffset);
 }
 
 static void scroll_callback(GLFWwindow* window, double x, double y) {
 	scrollX = x;
 	scrollY = y;
-	// FIX: Renderer::camera is nullptr
-	// Renderer::camera->ProcessMouseScroll(static_cast<float>(y));
+	Renderer::camera->ProcessMouseScroll(static_cast<float>(y));
 }
 
 
