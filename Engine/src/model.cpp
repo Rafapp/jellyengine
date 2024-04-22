@@ -17,7 +17,7 @@ void Model::draw(Shader& shader) {
         meshes[i].draw(shader);
 }
 
-void Model::loadModel(string path) {
+void Model::loadModel(std::string path) {
     Assimp::Importer import;
     const aiScene* scene = import.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
 
@@ -80,8 +80,4 @@ Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene)
     }
 
     return Mesh(vertices, indices, textures);
-}
-
-Model::Model(char* path) {
-    loadModel(path);
 }

@@ -12,7 +12,9 @@
 
 class Model : public GameObject {
 public:
-    Model(char* path);
+    Model(std::string path) {
+        loadModel(path);
+    }
     ~Model() {}
 
     glm::vec3 color;
@@ -23,7 +25,7 @@ private:
     vector<Mesh> meshes;
     string directory;
 
-    void loadModel(string path);
+    void loadModel(std::string path);
     void processNode(aiNode* node, const aiScene* scene);
     Mesh processMesh(aiMesh* mesh, const aiScene* scene);
 };

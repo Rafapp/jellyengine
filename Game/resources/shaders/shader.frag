@@ -1,11 +1,11 @@
-#version 330 core
+#version 460 core
 out vec4 FragColor;
 
 uniform vec3 lightPos;
 uniform vec3 viewPos;
 
 uniform vec3 color;
-uniform bool calculateLighting = false;
+uniform bool calculateLighting = true;
 
 in vec3 Normal;
 in vec3 FragPos;

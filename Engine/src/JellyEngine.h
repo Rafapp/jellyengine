@@ -10,10 +10,7 @@
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 
-namespace Renderer {
-	void Setup();
-	void Draw();
-}
+#include "renderer.h"
 
 // Window settings
 static GLFWwindow* window;
@@ -21,14 +18,14 @@ static int startWidth = 1280;
 static int startHeight = 720;
 
 // Data
-static float windowWidth, windowHeight;
+static float windowWidth = startWidth, windowHeight = startHeight;
 static float scrollX, scrollY;
 static float mouseX, mouseY;
 
 // Callbacks
-void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-void mouse_callback(GLFWwindow* window, double xpos, double ypos);
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
+static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+static void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 static void error_callback(int error, const char* description);
 
 // Engine
@@ -36,9 +33,7 @@ class Engine {
 public:
 	template<typename Game>
 	static int InitializeEngine() {
-		// Initialization
-		std::cout << "JELLY ENGINE: VERSION 1.0.0" << std::endl;
-		std::cout << "Starting ..." << std::endl;
+		std::cout << "INITIALIZING::JELLY ENGINE VERSION 1.0.0 ..." << std::endl;
 
 		GLuint vertex_buffer, vertex_shader, fragment_shader, program;
 
@@ -76,6 +71,12 @@ public:
 		glfwSwapInterval(1);
 
 		std::cout << "COMPLETE::JELLY ENGINE SETUP" << std::endl;
+		std::cout << std::endl;
+
+		std::cout << "INITIALIZING::RENDERER SETUP ..." << std::endl;
+		RendererSetup();
+		std::cout << "COMPLETE::RENDERER SETUP" << std::endl;
+		std::cout << std::endl;
 
 		Game game;
 		game.Start();
@@ -89,6 +90,15 @@ public:
 			currentFrame = glfwGetTime();
 			dt = currentFrame - lastFrame;
 			lastFrame = currentFrame;
+
+			// Update the camera
+			/*if (keyPressed("w")) Renderer::camera->ProcessKeyboard(FORWARD, dt);
+			if (keyPressed("a")) Renderer::camera->ProcessKeyboard(FORWARD, dt);
+			if (keyPressed("s")) Renderer::camera->ProcessKeyboard(FORWARD, dt);
+			if (keyPressed("d")) Renderer::camera->ProcessKeyboard(FORWARD, dt);
+			if (keyPressed("r")) Renderer::camera->ResetPosition();*/
+
+			RendererDraw();
 
 			glfwSwapBuffers(window);
 			glfwPollEvents();
@@ -120,11 +130,15 @@ static void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 static void mouse_callback(GLFWwindow* window, double x, double y) {
 	mouseX = static_cast<float>(x);
 	mouseY = static_cast<float>(y);
+	// FIX: Renderer::camera is nullptr
+	//Renderer::camera->ProcessMouseMovement(x, y);
 }
 
 static void scroll_callback(GLFWwindow* window, double x, double y) {
 	scrollX = x;
 	scrollY = y;
+	// FIX: Renderer::camera is nullptr
+	// Renderer::camera->ProcessMouseScroll(static_cast<float>(y));
 }
 
 

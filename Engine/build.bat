@@ -6,6 +6,6 @@ cmake -DCMAKE_BUILD_TYPE=Release -B out .
 :: Build the project
 cmake --build out
 
-set /p _= (Press any key...) >nul
-
-echo.
+@echo off
+echo Press any key to close...
+pause >nul

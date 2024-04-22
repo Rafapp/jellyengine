@@ -2,6 +2,8 @@
  * CAMERA: Class for a perspective-accurate camera
  */
 
+#include <iostream>
+
 #include "camera.h"
 
 using namespace std;
@@ -82,8 +84,8 @@ void Camera::ProcessMouseMovement(float xoffset, float yoffset, bool constrainPi
 }
 
 // processes input received from a mouse scroll-wheel event. Only requires input on the vertical wheel-axis
-void Camera::ProcessMouseScroll(float yoffset) {
-	Zoom -= (float)yoffset;
+void Camera::ProcessMouseScroll(float y) {
+	Zoom -= (float)y;
 	if (Zoom < 1.0f)
 		Zoom = 1.0f;
 	if (Zoom > 45.0f)

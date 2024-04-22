@@ -22,7 +22,7 @@ public:
 
 	void Draw() 
 	{
-		//m.draw();
+
 	}
 
 	// Exit is called before the game closes

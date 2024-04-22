@@ -4,11 +4,9 @@ project(Game)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(Game src/game.cpp src/game.h)  # Include both source and header files
+# Include both source and header files
+add_executable(Game src/game.cpp src/game.h)
 
-#target_include_directories(), glm etc.
-
-#target_link_libraries(Game PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../Engine/out/Debug/JellyEngine.lib)  # Link with JellyEngine library
-target_link_libraries(Game PUBLIC JellyEngine)  # Link with JellyEngine library
-
+# Link with JellyEngine library and include its headers
+target_link_libraries(Game PUBLIC JellyEngine)
 target_include_directories(Game PUBLIC ../Engine/src)

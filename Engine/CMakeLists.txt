@@ -40,5 +40,8 @@ add_subdirectory("libraries/glfw") # window dispatcher and input mgmt
 add_subdirectory("libraries/glm") # math
 add_subdirectory("libraries/assimp") # 3D model loading
 
+# Set resources folder
+target_compile_definitions(JellyEngine PUBLIC RESOURCES_PATH="${CMAKE_CURRENT_SOURCE_DIR}/../Game/resources/")
+
 target_link_libraries(JellyEngine PUBLIC glad glfw glm assimp)
 
