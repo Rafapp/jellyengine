@@ -17,7 +17,7 @@ public:
 	// Update is called every frame
 	void Update(float dt) 
 	{
-		std::cout << mouseX << ", " << mouseY << std::endl;
+
 	}
 
 	void Draw() 
