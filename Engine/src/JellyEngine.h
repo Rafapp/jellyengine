@@ -21,6 +21,8 @@ static int startHeight = 720;
 static float windowWidth = startWidth, windowHeight = startHeight;
 static float scrollX, scrollY;
 static float mouseX, mouseY;
+static Model* light;
+static vector<Model*> scene;
 
 // Callbacks
 static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -98,7 +100,7 @@ public:
 			if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) Renderer::camera->ProcessKeyboard(RIGHT, dt);
 			if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) Renderer::camera->ResetPosition();
 
-			Renderer::Draw();
+			Renderer::Draw(light, scene);
 
 			glfwSwapBuffers(window);
 			glfwPollEvents();
@@ -110,7 +112,6 @@ public:
 	virtual void Start() = 0;
 	virtual void Update(float dt) = 0;
 	virtual void Exit() = 0;
-	virtual void Draw() = 0;
 };
 
 /*

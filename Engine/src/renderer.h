@@ -11,10 +11,7 @@
 namespace Renderer {
 	extern Camera* camera;
 	extern Shader* shader;
-	extern Model* model;
-	extern Model* light;
-	extern Model* plane;
 
 	void Setup();
-	void Draw();
+	void Draw(Model* light, vector<Model*> scene);
 }

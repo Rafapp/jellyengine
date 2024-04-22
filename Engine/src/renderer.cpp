@@ -30,26 +30,6 @@ namespace Renderer {
         // Enable z-depth buffer
         glEnable(GL_DEPTH_TEST);
 
-        // TODO: Make this not hardcoded, must be -
-        // implementable in game .cpp
-        std::cout << "PATH: " << RESOURCES_PATH << std::endl;
-        model = new Model(RESOURCES_PATH "3D/dragon.obj");
-        model->color = glm::vec3(0.0f, 1.0f, 0.0f);
-        model->s = glm::vec3(1.0f);
-        cout << "COMPLETE::MODEL LOADED" << endl;
-
-        light = new Model(RESOURCES_PATH "3D/cube.obj");
-        light->p = glm::vec3(0, 5, 0);
-        light->color = glm::vec3(1.0f, 1.0f, 1.0f);
-        light->s = glm::vec3(0.125f, 0.125f, 0.125f);
-        cout << "COMPLETE::LIGHT LOADED" << endl;
-
-        plane = new Model(RESOURCES_PATH "3D/plane.obj");
-        plane->color = glm::vec3(0.0f, 0.0f, 1.0f);
-        plane->p = glm::vec3(0.0f, -0.25f, 0.0f);
-        plane->s = glm::vec3(5.0f, -1.0f, 5.0f);
-        cout << "COMPLETE::PLANE LOADED" << endl;
-
         // TODO: Make drawing in wireframe mode capable in game.cpp
         //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); 
 
@@ -57,11 +37,15 @@ namespace Renderer {
         shader->use();
 
         // Enable openGL color/alpha blending.
-        /*glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);*/
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
 
-    void Renderer::Draw() {
+    void Renderer::Draw(Model* light, vector<Model*> scene) {
+        // Check we have a light and models
+        assert(light != nullptr && "ERROR: No light provided!");
+        assert(scene.size() > 0 && "ERROR: Scene is empty!");
+
         glViewport(0, 0, windowWidth, windowHeight);
 
         // BG and clearing buffers
@@ -97,30 +81,19 @@ namespace Renderer {
         glUniform3f(lightPosLoc, light->p.x, light->p.y, light->p.z);// Set light position.
         light->draw(*shader);
 
-        // TODO: For loop the hell out of the stuff under here with a vector and Scene
-        glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(model->getTransform()));
-        glUniformMatrix4fv(modelViewLoc, 1, GL_FALSE, glm::value_ptr(view));
-        glUniformMatrix4fv(modelProjectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
+        // Render all other objects in the scene
+        for (Model* model : scene) {
+            glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(model->getTransform()));
+            glUniformMatrix4fv(modelViewLoc, 1, GL_FALSE, glm::value_ptr(view));
+            glUniformMatrix4fv(modelProjectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
 
-        // Send model data
-        glUniform3f(colorLoc, model->color.x, model->color.y, model->color.z);
-        glUniform3f(modelViewPosLoc, camera->Position.x, camera->Position.y, camera->Position.z);
-        glUniform1i(boolLoc, 1);
+            // Send model data
+            glUniform3f(colorLoc, model->color.x, model->color.y, model->color.z);
+            glUniform3f(modelViewPosLoc, camera->Position.x, camera->Position.y, camera->Position.z);
+            glUniform1i(boolLoc, 1);
 
-        // Render model
-        model->draw(*shader);
-
-        // Send plane position
-        glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(plane->getTransform()));
-        glUniformMatrix4fv(modelViewLoc, 1, GL_FALSE, glm::value_ptr(view));
-        glUniformMatrix4fv(modelProjectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
-
-        // Send plane data ~ TODO: Streamline this for an arbitrary amount of objects
-        glUniform3f(colorLoc, plane->color.x, plane->color.y, plane->color.z);
-        glUniform3f(modelViewPosLoc, camera->Position.x, camera->Position.y, camera->Position.z);
-        glUniform1i(boolLoc, 1);
-
-        // Render plane
-        plane->draw(*shader);
+            // Render model
+            model->draw(*shader);
+        }
     }
 }
