@@ -41,8 +41,11 @@
 <div align = "center">
 <img src=https://github.com/Rafapp/jellyengine/assets/38381290/f11cf8ac-0174-47a3-84cb-1bfb2166e671 width = "500" align = "center">
 </div>
-
+<div align = "center">
+<img src=https://github.com/Rafapp/jellyengine/assets/38381290/75d60c6a-c43c-4988-b81b-ef28b0e6c4ee width = "500" align = "center">
+</div>
 <p>In progress ...</p>
 
 <h2>How to use</h2>
+
 <p>In progress ...</p>
