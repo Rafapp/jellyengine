@@ -1,6 +1,4 @@
-**/out
-**bin/
-**build/
-**/.vs
-**.idea/
-**CMakeSettings.json
+Engine/out
+Game/out
+.vs
+out
