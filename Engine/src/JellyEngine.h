@@ -14,8 +14,8 @@
 
 // Window settings
 static GLFWwindow* window;
-static int startWidth = 1280;
-static int startHeight = 720;
+static int startWidth = 1920;
+static int startHeight = 1080;
 
 // Data
 static float windowWidth = startWidth, windowHeight = startHeight;
