@@ -11,6 +11,7 @@
 #include <glm/glm.hpp>
 
 #include "renderer.h"
+#include "camera.h"
 
 // Window settings
 static GLFWwindow* window;

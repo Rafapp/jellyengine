@@ -11,6 +11,8 @@ public:
 	// Start is called on the first frame
 	void Start() 
 	{
+		Renderer::camera->LookAt = glm::vec3(0.0);
+
 		std::cout << "Game initialized" << std::endl;
 		light = new Model(RESOURCES_PATH "3D/cube.obj");
 		light->p = glm::vec3(0, 5, 0);
@@ -51,6 +53,7 @@ public:
 		static float t = 0;
 		t += dt;
 		light->p = glm::vec3(glm::cos(t), 1, glm::sin(t));
+		Renderer::camera->Position = glm::vec3(glm::cos(t) * 5, 1, glm::sin(t) * 5);
 	}
 
 	// Exit is called before the game closes

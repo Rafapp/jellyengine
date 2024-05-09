@@ -25,6 +25,9 @@ Camera::Camera() {
 	MouseSensitivity = 0.05f;
 	Zoom = 45.0f;
 
+	// Set as static cam by default
+	type = STATIC;
+
 	updateCameraVectors();
 }
 
@@ -43,14 +46,25 @@ Camera::Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch) {
 	MouseSensitivity = 0.05f;
 	Zoom = 45.0f;
 
+	// Set as static cam by default
+	type = STATIC;
+
 	updateCameraVectors();
 }
 
 // returns the view matrix calculated using Euler Angles and the LookAt Matrix
-glm::mat4 Camera::GetViewMatrix() { return glm::lookAt(Position, Position + Front, Up); }
+glm::mat4 Camera::GetViewMatrix() { 
+	if (type == DYNAMIC) {
+		return glm::lookAt(Position, Position + Front, Up);
+	}
+	else if (type == STATIC) {
+		return glm::lookAt(Position, LookAt, Up);
+	}
+}
 
 // processes input received from any keyboard-like input system. Accepts input parameter in the form of camera defined ENUM (to abstract it from windowing systems)
 void Camera::ProcessKeyboard(Camera_Movement direction, float deltaTime) {
+	if (type == STATIC) return;
 	float velocity = MovementSpeed * deltaTime;
 	if (direction == FORWARD)
 		Position += Front * velocity;
@@ -64,6 +78,7 @@ void Camera::ProcessKeyboard(Camera_Movement direction, float deltaTime) {
 
 // processes input received from a mouse input system. Expects the offset value in both the x and y direction.
 void Camera::ProcessMouseMovement(float xoffset, float yoffset, bool constrainPitch) {
+	if (type == STATIC) return;
 	xoffset *= MouseSensitivity;
 	yoffset *= MouseSensitivity;
 
@@ -81,12 +96,11 @@ void Camera::ProcessMouseMovement(float xoffset, float yoffset, bool constrainPi
 
 	// update Front, Right and Up Vectors using the updated Euler angles
 	updateCameraVectors();
-	std::cout << Pitch << std::endl;
 }
 
 // processes input received from a mouse scroll-wheel event. Only requires input on the vertical wheel-axis
 void Camera::ProcessMouseScroll(float y) {
-	std::cout << "Processing mouse scroll" << std::endl;
+	if (type == STATIC) return;
 	Zoom -= (float)y;
 	if (Zoom < 1.0f)
 		Zoom = 1.0f;
@@ -108,5 +122,6 @@ void Camera::updateCameraVectors() {
 }
 
 void Camera::ResetPosition() {
+	if (type == STATIC) return;
 	Position = glm::vec3(0.0f);
 }

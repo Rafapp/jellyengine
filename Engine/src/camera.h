@@ -17,6 +17,12 @@ enum Camera_Movement {
     RIGHT
 };
 
+// Camera types with different functionality
+enum Camera_Type {
+    STATIC,
+    DYNAMIC
+};
+
 // An abstract camera class that processes input and calculates the corresponding Euler Angles, Vectors and Matrices for use in OpenGL
 class Camera
 {
@@ -27,6 +33,8 @@ public:
     glm::vec3 Up;
     glm::vec3 Right;
     glm::vec3 WorldUp;
+    glm::vec3 LookAt;
+    Camera_Type type;
 
     // euler Angles
     float Yaw;
