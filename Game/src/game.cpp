@@ -52,8 +52,8 @@ public:
 		dragon3->r += glm::vec3(0,0.5,0);
 		static float t = 0;
 		t += dt;
-		light->p = glm::vec3(glm::cos(t), 1, glm::sin(t));
-		Renderer::camera->Position = glm::vec3(glm::cos(t) * 5, 1, glm::sin(t) * 5);
+		light->p = glm::vec3(glm::cos(t) * 2.5, 1, glm::sin(t) * 2.5);
+		Renderer::camera->Position = glm::vec3(glm::cos(t) * 7.5, 5, glm::sin(t) * 7.5);
 	}
 
 	// Exit is called before the game closes

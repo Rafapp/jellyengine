@@ -108,6 +108,9 @@ public:
 			glfwPollEvents();
 
 			game.Update(dt);
+
+			// Quit on esc
+			if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) glfwTerminate();
 		}
 	}
 

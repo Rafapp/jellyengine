@@ -18,7 +18,8 @@ std::map<std::string, int> keys = {
 	{"down", GLFW_KEY_DOWN},
 	{"left", GLFW_KEY_LEFT},
 	{"right", GLFW_KEY_RIGHT},
-	{"space", GLFW_KEY_RIGHT}
+	{"space", GLFW_KEY_SPACE},
+	{"esc", GLFW_KEY_ESCAPE}
 };
 
 inline bool keyPressed(std::string k) {
