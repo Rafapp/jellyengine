@@ -13,6 +13,7 @@ set(HEADER_FILES
 	src/gameObject.h
 	src/mesh.h
 	src/model.h
+	src/physics.h
 )
 
 set(SOURCE_FILES
@@ -24,6 +25,7 @@ set(SOURCE_FILES
 	src/gameObject.cpp
 	src/mesh.cpp
 	src/model.cpp
+	src/physics.cpp
 )
 
 add_library(JellyEngine STATIC ${SOURCE_FILES} ${HEADER_FILES})

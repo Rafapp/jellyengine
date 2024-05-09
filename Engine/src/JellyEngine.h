@@ -10,6 +10,7 @@
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 
+#include "physics.h"
 #include "renderer.h"
 #include "camera.h"
 

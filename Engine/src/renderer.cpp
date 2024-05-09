@@ -45,8 +45,6 @@ namespace Renderer {
         assert(light != nullptr && "ERROR: No light provided!");
         assert(scene.size() > 0 && "ERROR: Scene is empty!");
 
-        //glViewport(0, 0, windowWidth, windowHeight);
-
         // BG and clearing buffers
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);

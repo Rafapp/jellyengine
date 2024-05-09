@@ -20,11 +20,12 @@ public:
     glm::vec3 color;
 
     void draw(Shader& shader);
-private:
+
     // model data
     vector<Mesh> meshes;
     string directory;
 
+private:
     void loadModel(std::string path);
     void processNode(aiNode* node, const aiScene* scene);
     Mesh processMesh(aiMesh* mesh, const aiScene* scene);
