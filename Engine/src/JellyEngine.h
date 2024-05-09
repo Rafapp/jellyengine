@@ -14,6 +14,7 @@
 
 // Window settings
 static GLFWwindow* window;
+static float targetAspectRatio = 16.0 / 9.0;
 static int startWidth = 1920;
 static int startHeight = 1080;
 
@@ -123,9 +124,29 @@ static void error_callback(int error, const char* description) {
 }
 
 static void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
+
+	// Aspect ratio calculations
+	static float aspectRatio = (float)width / (float)height;
+	int newWidth, newHeight;
+
+	if (aspectRatio > targetAspectRatio) {
+		newWidth = (int)(height * targetAspectRatio);
+		newHeight = height;
+	}
+	else {
+		newWidth = width;
+		newHeight = (int)(width / targetAspectRatio);
+	}
+
+	// Calculate viewport position to center the scene
+	int xOffset = (width - newWidth) / 2;
+	int yOffset = (height - newHeight) / 2;
+
+	// Set the viewport with letterboxing
+	glViewport(xOffset, yOffset, newWidth, newHeight);
+
 	windowWidth = width;
 	windowHeight = height;
-	glViewport(0, 0, width, height);
 }
 
 static bool firstMouse = true;

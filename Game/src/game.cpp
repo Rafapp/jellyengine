@@ -23,19 +23,19 @@ public:
 		plane->s = glm::vec3(5.0f, -1.0f, 5.0f);
 		scene.push_back(plane);
 
-		dragon = new Model(RESOURCES_PATH "3D/dragon.obj");
+		dragon = new Model(RESOURCES_PATH "3D/cube.obj");
 		dragon->color = glm::vec3(1.0f, 0.0f, 0.0f);
 		dragon->p = glm::vec3(2.5, 1.0, 0.0);
 		dragon->s = glm::vec3(1.0f);
 		scene.push_back(dragon);
 
-		dragon2 = new Model(RESOURCES_PATH "3D/dragon.obj");
+		dragon2 = new Model(RESOURCES_PATH "3D/cube.obj");
 		dragon2->color = glm::vec3(0.0f, 1.0f, 0.0f);
 		dragon2->p = glm::vec3(0.0, 1.0, 0.0);
 		dragon2->s = glm::vec3(1.0f);
 		scene.push_back(dragon2);
 
-		dragon3 = new Model(RESOURCES_PATH "3D/dragon.obj");
+		dragon3 = new Model(RESOURCES_PATH "3D/cube.obj");
 		dragon3->color = glm::vec3(0.0f, 0.0f, 1.0f);
 		dragon3->p = glm::vec3(-2.5, 1.0, 0.0);
 		dragon3->s = glm::vec3(1.0f);

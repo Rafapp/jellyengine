@@ -20,7 +20,6 @@ namespace Renderer {
 
     void Renderer::Setup() {
         camera = new Camera();
-        std::cout << "zoom: " << Renderer::camera->Zoom << std::endl;
         float lastX = windowWidth / 2.0;
         float lastY = windowHeight / 2.0;
 
@@ -46,7 +45,7 @@ namespace Renderer {
         assert(light != nullptr && "ERROR: No light provided!");
         assert(scene.size() > 0 && "ERROR: Scene is empty!");
 
-        glViewport(0, 0, windowWidth, windowHeight);
+        //glViewport(0, 0, windowWidth, windowHeight);
 
         // BG and clearing buffers
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -55,9 +54,9 @@ namespace Renderer {
 
         // Projection matrix
         float fov = glm::radians(camera->Zoom);
-        float aspectRatio = windowWidth / windowHeight;
+        float aspectRatio = (float)windowWidth / (float)windowHeight;
 
-        glm::mat4 projection = glm::perspective(glm::radians(camera->Zoom), (float)windowWidth / (float)windowHeight, 0.1f, 100.0f);
+        glm::mat4 projection = glm::perspective(glm::radians(camera->Zoom), aspectRatio, 0.1f, 100.0f);
 
         // View matrix
         glm::mat4 view = camera->GetViewMatrix();
