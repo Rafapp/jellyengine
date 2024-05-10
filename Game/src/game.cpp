@@ -34,16 +34,24 @@ public:
 		softBody->color = glm::vec3(1.0f, 0.0f, 0.0f);
 		softBody->p = glm::vec3(0, 1.0, 0.0);
 		softBody->s = glm::vec3(1.0f);
+		softBody->pointMasses[0].position = glm::vec3(10, 10, 10);
+		softBody->pointMasses[3].position = glm::vec3(0, 10, 10);
+		softBody->pointMasses[5].position = glm::vec3(10, 10, 0);
 		scene.push_back(softBody);
 	}
 
 	// Update is called every frame
 	void Update(float dt) 
 	{
+		// Additive time function
 		static float t = 0;
 		t += dt;
+
+		// Make camera and light loop around using time and sin, cos
 		light->p = glm::vec3(glm::cos(t) * 2.5, 1, glm::sin(t) * 2.5);
 		Renderer::camera->Position = glm::vec3(glm::cos(t) * 7.5, 5, glm::sin(t) * 7.5);
+
+		// Update our soft body
 		softBody->Update();
 	}
 

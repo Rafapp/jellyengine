@@ -10,6 +10,7 @@
 #include <glm/glm.hpp>
 
 #include "model.h"
+#include "mesh.h"
 
 class SoftBody : public Model{
 public:

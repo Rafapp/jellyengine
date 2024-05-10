@@ -13,9 +13,10 @@ SoftBody::SoftBody(std::string path) : Model(path) {
 }
 
 void SoftBody::Update() {
-	for (auto a : pointMasses) {
-		std::cout << a.position.x << "," << a.position.y << "," << a.position.z << std::endl;
-	}
+	// Euler integrate here
+	// -
+
+	meshes[0].UpdateVertices(pointMasses);
 }
 
 void SoftBody::Reset() {
