@@ -12,15 +12,44 @@
 #include "model.h"
 #include "mesh.h"
 
+struct Spring {
+	Vertex* neighbor;
+	float restLength;
+};
+
+class PointMass {
+public:
+	PointMass(Vertex* ref, float stiffness, float damping);
+	~PointMass();
+
+	vector<Spring> springs;
+	Vertex* vert; // Pointer to vert being integrated
+
+	glm::vec3 velocity;
+	glm::vec3 acceleration;
+	glm::vec3 forces;
+
+	float stiffness;
+	float damping;
+
+	void AddNeighbor(Vertex* ref);
+	void Integrate();
+};
+
 class SoftBody : public Model{
 public:
 	SoftBody(std::string path);
 	~SoftBody();
 
-	void Update();
+	float stiffness;
+	float damping;
+
+	void Update(float dt);
 	void Reset();
 
-	// We update these vertices (copy), not the ones of the original mesh,
-	// and pass them as a vertex buffer for rendering.
-	vector<Vertex> pointMasses; 
+private:	
+	// Vertices we draw, initially set to model's verts
+	vector<Vertex> dynamicVertices; 
+
+	void CreateMassSpringSystem();
 };

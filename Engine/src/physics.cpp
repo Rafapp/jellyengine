@@ -7,22 +7,49 @@
 
 #include "physics.h"
 
+/*
+ * Soft body
+ */
 SoftBody::SoftBody(std::string path) : Model(path) {
 	assert(meshes.size() > 0 && "ERROR: More than one mesh provided for softbody in this model!");
-	pointMasses = vector<Vertex>(meshes[0].vertices);
+	dynamicVertices = vector<Vertex>(meshes[0].vertices);
 }
 
-void SoftBody::Update() {
+SoftBody::~SoftBody() {
+
+}
+
+void SoftBody::CreateMassSpringSystem() {
+	
+}
+
+void SoftBody::Update(float dt) {
 	// Euler integrate here
 	// -
 
-	meshes[0].UpdateVertices(pointMasses);
+	// Update vertices for rendering
+	meshes[0].UpdateVertices(dynamicVertices);
 }
 
 void SoftBody::Reset() {
 
 }
 
-SoftBody::~SoftBody() {
+/*
+ * Point mass
+ */
+PointMass::PointMass(Vertex* ref, float stiffness, float damping) {
+	vert = ref;
+	this->stiffness = stiffness;
+	this->damping = stiffness;
+}
+
+void PointMass::AddNeighbor(Vertex* ref) {
+	Spring s;
+	s.neighbor = ref;
+	s.restLength = glm::distance(vert->position, ref->position);
+}
+
+void PointMass::Integrate() {
 
 }

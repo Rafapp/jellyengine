@@ -34,9 +34,6 @@ public:
 		softBody->color = glm::vec3(1.0f, 0.0f, 0.0f);
 		softBody->p = glm::vec3(0, 1.0, 0.0);
 		softBody->s = glm::vec3(1.0f);
-		softBody->pointMasses[0].position = glm::vec3(10, 10, 10);
-		softBody->pointMasses[3].position = glm::vec3(0, 10, 10);
-		softBody->pointMasses[5].position = glm::vec3(10, 10, 0);
 		scene.push_back(softBody);
 	}
 
@@ -52,7 +49,7 @@ public:
 		Renderer::camera->Position = glm::vec3(glm::cos(t) * 7.5, 5, glm::sin(t) * 7.5);
 
 		// Update our soft body
-		softBody->Update();
+		softBody->Update(dt);
 	}
 
 	// Exit is called before the game closes
