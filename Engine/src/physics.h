@@ -19,7 +19,7 @@ struct Spring {
 
 class PointMass {
 public:
-	PointMass(Vertex* ref, float stiffness, float damping);
+	PointMass(Vertex* ref, float restitution, float mass, float stiffness, float damping);
 	~PointMass();
 
 	vector<Spring> springs;
@@ -29,6 +29,7 @@ public:
 	glm::vec3 acceleration;
 	glm::vec3 forces;
 
+	float restitution;
 	float mass;
 	float stiffness;
 	float damping;
@@ -39,9 +40,11 @@ public:
 
 class SoftBody : public Model{
 public:
-	SoftBody(std::string path);
+	SoftBody(std::string path, float restitution, float mass, float stiffness, float damping);
 	~SoftBody();
 
+	float restitution;
+	float mass;
 	float stiffness;
 	float damping;
 
