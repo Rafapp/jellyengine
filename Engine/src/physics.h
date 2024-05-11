@@ -29,11 +29,12 @@ public:
 	glm::vec3 acceleration;
 	glm::vec3 forces;
 
+	float mass;
 	float stiffness;
 	float damping;
 
 	void AddNeighbor(Vertex* ref);
-	void Integrate();
+	void Integrate(float dt);
 };
 
 class SoftBody : public Model{
@@ -44,12 +45,12 @@ public:
 	float stiffness;
 	float damping;
 
+	void AddForce(glm::vec3(force));
 	void Update(float dt);
 	void Reset();
 
 private:	
 	// Vertices we draw, initially set to model's verts
 	vector<Vertex> dynamicVertices; 
-
-	void CreateMassSpringSystem();
+	vector<PointMass> massSpringSystem;
 };

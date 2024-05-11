@@ -48,7 +48,8 @@ public:
 		light->p = glm::vec3(glm::cos(t) * 2.5, 1, glm::sin(t) * 2.5);
 		Renderer::camera->Position = glm::vec3(glm::cos(t) * 7.5, 5, glm::sin(t) * 7.5);
 
-		// Update our soft body
+		// Update our soft body, add gravity force to fall
+		softBody->AddForce(glm::vec3(0.0, -1.0, 0.0));
 		softBody->Update(dt);
 	}
 
