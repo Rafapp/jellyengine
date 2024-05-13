@@ -32,7 +32,7 @@ public:
 		scene.push_back(plane);
 
 		// Create soft body with cube model
-		softBody = new SoftBody(RESOURCES_PATH "3D/plane.obj", 0.9, 1.0, 0.1, 0.99);
+		softBody = new SoftBody(RESOURCES_PATH "3D/cube.obj", 0.9, 1.0, 0.1, 0.99);
 		softBody->color = glm::vec3(0.0, 1.0, 0.0);
 		softBody->p = glm::vec3(0, 2.0, 0.0);
 		softBody->s = glm::vec3(0.5);
@@ -49,7 +49,7 @@ public:
 
 		// Make camera and light loop around using time and sin, cos
 		light->p = glm::vec3(glm::cos(t/2) * 2.5, 1, glm::sin(t/2) * 2.5);
-		//Renderer::camera->Position = glm::vec3(glm::cos(t/2) * 7.5, 5, glm::sin(t/2) * 7.5);
+		Renderer::camera->Position = glm::vec3(glm::cos(t/2) * 7.5, 5, glm::sin(t/2) * 7.5);
 
 		softBody->AddForce(glm::vec3(0.0, -9.81, 0.0));
 		softBody->Update(dt);

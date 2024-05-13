@@ -29,10 +29,10 @@ SoftBody::SoftBody(std::string path, float restitution, float mass, float stiffn
 		PointMass p(&v, this, restitution, mass, stiffness, damping);
 		massSpringSystem.push_back(p);
 	}
-	std::cout << "::SOFTBODY STATS::" << std::endl;
-	std::cout << "vertices: " << dynamicVertices.size() << std::endl;
-	std::cout << "springs: " << springCount << std::endl;
-	std::cout << std::endl;
+	//std::cout << "::SOFTBODY STATS::" << std::endl;
+	//std::cout << "vertices: " << dynamicVertices.size() << std::endl;
+	//std::cout << "springs: " << springCount << std::endl;
+	//std::cout << std::endl;
 }
 
 SoftBody::~SoftBody() {
@@ -89,12 +89,12 @@ PointMass::PointMass(Vertex* vert, SoftBody* body, float restitution, float mass
 
 	// Add springs based on nearby distance
 	// TODO: Update this algorithm to something more reliable
-	for (Vertex& v : body->dynamicVertices) {
+	/*for (Vertex& v : body->dynamicVertices) {
 		if (&v == vert) return;
 		if (glm::distance(vert->position, v.position) < 100.0) {
 			AddSpring(&v);
 		}
-	}
+	}*/
 }
 
 PointMass::~PointMass() {
@@ -106,13 +106,14 @@ void PointMass::AddSpring(Vertex* ref) {
 	s.neighbor = ref;
 	s.restLength = glm::distance(vert->position, ref->position);
 	springs.push_back(s);
-	std::cout << "create spring from: " << std::endl;
-	std::cout << vert->position.x << ", " << vert->position.y << ", " << vert->position.z << std::endl;
-	std::cout << "to: " << std::endl;
-	std::cout << ref->position.x << ", " << ref->position.y << ", " << ref->position.z << std::endl;
-	std::cout << "spring distance: " << glm::distance(vert->position, ref->position) << std::endl;
-	std::cout << std::endl;
-	springCount++;
+
+	//std::cout << "create spring from: " << std::endl;
+	//std::cout << vert->position.x << ", " << vert->position.y << ", " << vert->position.z << std::endl;
+	//std::cout << "to: " << std::endl;
+	//std::cout << ref->position.x << ", " << ref->position.y << ", " << ref->position.z << std::endl;
+	//std::cout << "spring distance: " << glm::distance(vert->position, ref->position) << std::endl;
+	//std::cout << std::endl;
+	//springCount++;
 }
 
 void PointMass::Integrate(float dt) {
