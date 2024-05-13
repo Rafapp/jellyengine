@@ -29,8 +29,10 @@ SoftBody::SoftBody(std::string path, float restitution, float mass, float stiffn
 		PointMass p(&v, this, restitution, mass, stiffness, damping);
 		massSpringSystem.push_back(p);
 	}
-	std::cout << "VERT COUNT: " << sizeof(dynamicVertices);
-	std::cout << "SPRING COUNT: " << springCount << std::endl;
+	std::cout << "::SOFTBODY STATS::" << std::endl;
+	std::cout << "vertices: " << dynamicVertices.size() << std::endl;
+	std::cout << "springs: " << springCount << std::endl;
+	std::cout << std::endl;
 }
 
 SoftBody::~SoftBody() {
@@ -54,7 +56,13 @@ void SoftBody::Update(float dt) {
 
 void SoftBody::Reset() {
 	// Reset soft body to original state (original position included)
-	dynamicVertices = vector<Vertex>(meshes[0].vertices);
+	dynamicVertices.clear();
+	dynamicVertices.reserve(meshes[0].vertices.size());
+
+	for (const Vertex& vertex : meshes[0].vertices) {
+		dynamicVertices.push_back(vertex);
+	}
+
 	for (PointMass& p : massSpringSystem) {
 		p.velocity = glm::vec3(0.0);
 		p.acceleration = glm::vec3(0.0);
@@ -120,10 +128,10 @@ void PointMass::Integrate(float dt) {
 	} 
 
 	// Calculate spring forces
-	for (Spring s : springs) {
-		// F = -kx
-		forces += -stiffness * (vert->position - s.restLength);
-	}
+	//for (Spring s : springs) {
+	//	// F = -kx
+	//	forces += -stiffness * (vert->position - s.restLength);
+	//}
 
 	acceleration = forces / mass;
 	velocity += acceleration * dt;
