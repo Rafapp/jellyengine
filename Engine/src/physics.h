@@ -17,13 +17,16 @@ struct Spring {
 	float restLength;
 };
 
+class SoftBody;
+
 class PointMass {
 public:
-	PointMass(Vertex* ref, float restitution, float mass, float stiffness, float damping);
+	PointMass(Vertex* vert, SoftBody* body, float restitution, float mass, float stiffness, float damping);
 	~PointMass();
 
 	vector<Spring> springs;
 	Vertex* vert; // Pointer to vert being integrated
+	SoftBody* body;
 
 	glm::vec3 velocity;
 	glm::vec3 acceleration;
@@ -38,7 +41,7 @@ public:
 	void Integrate(float dt);
 };
 
-class SoftBody : public Model{
+class SoftBody : public Model {
 public:
 	SoftBody(std::string path, float restitution, float mass, float stiffness, float damping);
 	~SoftBody();
@@ -52,8 +55,8 @@ public:
 	void Update(float dt);
 	void Reset();
 
-private:	
+private:
 	// Vertices we draw, initially set to model's verts
-	vector<Vertex> dynamicVertices; 
+	vector<Vertex> dynamicVertices;
 	vector<PointMass> massSpringSystem;
 };
