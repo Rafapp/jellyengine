@@ -37,7 +37,7 @@ public:
 	float stiffness;
 	float damping;
 
-	void AddNeighbor(Vertex* ref);
+	void AddSpring(Vertex* ref);
 	void Integrate(float dt);
 };
 
@@ -54,8 +54,7 @@ public:
 	void AddForce(glm::vec3(force));
 	void Update(float dt);
 	void Reset();
-
-private:
+	
 	// Vertices we draw, initially set to model's verts
 	vector<Vertex> dynamicVertices;
 	vector<PointMass> massSpringSystem;

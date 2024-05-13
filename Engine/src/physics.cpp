@@ -10,6 +10,8 @@
 /*
  * Soft body
  */
+int springCount = 0;
+
 SoftBody::SoftBody(std::string path, float restitution, float mass, float stiffness, float damping) : Model(path) {
 	assert(meshes.size() > 0 && "ERROR: More than one mesh provided for softbody in this model, provide a single mesh!");
 	
@@ -27,6 +29,8 @@ SoftBody::SoftBody(std::string path, float restitution, float mass, float stiffn
 		PointMass p(&v, this, restitution, mass, stiffness, damping);
 		massSpringSystem.push_back(p);
 	}
+	std::cout << "VERT COUNT: " << sizeof(dynamicVertices);
+	std::cout << "SPRING COUNT: " << springCount << std::endl;
 }
 
 SoftBody::~SoftBody() {
@@ -62,39 +66,64 @@ void SoftBody::Reset() {
  * Point mass
  */
 PointMass::PointMass(Vertex* vert, SoftBody* body, float restitution, float mass, float stiffness, float damping){
+	
 	this->vert = vert; // Reference vertex in dynamic vertices
 	this->body = body;
 
 	this->restitution = restitution;
 	this->mass = mass;
 	this->stiffness = stiffness;
-	this->damping = stiffness;
+	this->damping = damping;
 
 	velocity = glm::vec3(0.0);
 	acceleration = glm::vec3(0.0);
 	forces = glm::vec3(0.0);
+
+	// Add springs based on nearby distance
+	// TODO: Update this algorithm to something more reliable
+	for (Vertex& v : body->dynamicVertices) {
+		if (&v == vert) return;
+		if (glm::distance(vert->position, v.position) < 100.0) {
+			AddSpring(&v);
+		}
+	}
 }
 
 PointMass::~PointMass() {
 
 }
 
-void PointMass::AddNeighbor(Vertex* ref) {
+void PointMass::AddSpring(Vertex* ref) {
 	Spring s;
 	s.neighbor = ref;
 	s.restLength = glm::distance(vert->position, ref->position);
+	springs.push_back(s);
+	std::cout << "create spring from: " << std::endl;
+	std::cout << vert->position.x << ", " << vert->position.y << ", " << vert->position.z << std::endl;
+	std::cout << "to: " << std::endl;
+	std::cout << ref->position.x << ", " << ref->position.y << ", " << ref->position.z << std::endl;
+	std::cout << "spring distance: " << glm::distance(vert->position, ref->position) << std::endl;
+	std::cout << std::endl;
+	springCount++;
 }
 
 void PointMass::Integrate(float dt) {
 
 	// TODO: Make floor collisions not hardcoded, add rigid->soft body collisions
-	glm::mat4 inverse = glm::inverse(body->getTransform());
-	glm::vec4 world = inverse * glm::vec4(vert->position, 1);
-	std::cout << "world space: " << world.x << ", " << world.y << ", " << world.z << ", " << std::endl;
+	glm::mat4 transform = body->getTransform();
+	glm::mat4 inverse = glm::inverse(transform);
 
-	if (world.y <= -10.0) {
-		velocity = glm::vec3(velocity.x, -velocity.y * restitution, velocity.z);
+	glm::vec3 world = transform * glm::vec4(vert->position, 1);
+
+	if (world.y <= 0.0) {
+		velocity = glm::vec4(velocity.x, -velocity.y * restitution, velocity.z, 1);
 	} 
+
+	// Calculate spring forces
+	for (Spring s : springs) {
+		// F = -kx
+		forces += -stiffness * (vert->position - s.restLength);
+	}
 
 	acceleration = forces / mass;
 	velocity += acceleration * dt;
