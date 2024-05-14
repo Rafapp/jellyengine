@@ -33,7 +33,7 @@ void main()
 		vec3 specular = spec * specularStrength * vec3(1.0, 1.0, 1.0); // Assume white light color
 
 		vec3 result = color * (ambient + scatter_diffuse) + specular;
-		FragColor = vec4(result, 1); // Set transparency of model here
+		FragColor = vec4(result, 0.75); // Set transparency of model here
 	}
 	else{
 		FragColor = vec4(color, 1.0);

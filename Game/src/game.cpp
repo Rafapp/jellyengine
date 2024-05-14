@@ -33,7 +33,7 @@ public:
 
 		// Create soft body with cube model
 		// std::string path, float restitution, float mass, float stiffness, float damping
-		softBody = new SoftBody(RESOURCES_PATH "3D/cube.obj", 0.5, 1, .5, 0.1);
+		softBody = new SoftBody(RESOURCES_PATH "3D/tetromino/T.obj", 0.5, 1, 5, 0.1);
 		softBody->color = glm::vec3(0.0, 1.0, 0.0);
 		softBody->p = glm::vec3(0, 2.0, 0.0);
 		softBody->s = glm::vec3(0.5);
@@ -53,7 +53,7 @@ public:
 		light->p = glm::vec3(glm::cos(t/2) * 2.5, 1, glm::sin(t/2) * 2.5);
 		Renderer::camera->Position = glm::vec3(glm::cos(t/2) * 7.5, 5, glm::sin(t/2) * 7.5);
 
-		softBody->AddForce(glm::vec3(0.0, -1, 0.0));
+		softBody->AddForce(glm::vec3(0.0, -9.81, 0.0));
 		softBody->Update(dt);
 
 		if (keyPressed("r") && !rPress) {
@@ -63,7 +63,7 @@ public:
 		if (keyReleased("r")) rPress = false;
 
 		if (keyPressed("space") && !rPress) {
-			softBody->AddForce(glm::vec3(0, 10, 0));
+			softBody->AddForce(glm::vec3(0, 100, 0));
 			spacePress = true;
 		}
 		if (keyReleased("space")) spacePress = false;

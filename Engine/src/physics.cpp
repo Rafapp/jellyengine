@@ -35,7 +35,7 @@ SoftBody::SoftBody(std::string path, float restitution, float mass, float stiffn
 	for (PointMass& p1 : pointMasses) {
 		for (PointMass& p2 : pointMasses) {
 			float d = glm::distance(p1.vert->position, p2.vert->position);
-			if (d > 0.1 && d < 9999) {
+			if (d > 0.1) {
 				AddSpring(&p1, &p2);
 			}
 		}
