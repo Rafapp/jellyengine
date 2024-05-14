@@ -12,19 +12,20 @@
 #include "model.h"
 #include "mesh.h"
 
+class SoftBody;
+class PointMass;
+
 struct Spring {
-	Vertex* neighbor;
+	PointMass* a;
+	PointMass* b;
 	float restLength;
 };
-
-class SoftBody;
 
 class PointMass {
 public:
 	PointMass(Vertex* vert, SoftBody* body, float restitution, float mass, float stiffness, float damping);
 	~PointMass();
 
-	vector<Spring> springs;
 	Vertex* vert; // Pointer to vert being integrated
 	SoftBody* body;
 
@@ -37,8 +38,15 @@ public:
 	float stiffness;
 	float damping;
 
-	void AddSpring(Vertex* ref);
 	void Integrate(float dt);
+
+	bool operator==(const PointMass& other) const {
+		return *this == other;
+	}
+
+	bool operator!=(const PointMass& other) const {
+		return !(*this == other);
+	}
 };
 
 class SoftBody : public Model {
@@ -51,11 +59,13 @@ public:
 	float stiffness;
 	float damping;
 
+	// Vertices we draw, initially set to model's verts
+	vector<Vertex> dynamicVertices;
+	vector<Spring> springs;
+	vector<PointMass> pointMasses;
+
 	void AddForce(glm::vec3(force));
 	void Update(float dt);
 	void Reset();
-	
-	// Vertices we draw, initially set to model's verts
-	vector<Vertex> dynamicVertices;
-	vector<PointMass> massSpringSystem;
+	void AddSpring(PointMass* a, PointMass* b);
 };

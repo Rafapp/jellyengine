@@ -29,7 +29,7 @@ namespace Renderer {
         // Enable z-depth buffer
         glEnable(GL_DEPTH_TEST);
 
-        // TODO: Make drawing in wireframe mode capable in game.cpp
+        // TRANSPARENT TODO: Make drawing in wireframe mode capable in game.cpp
         //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); 
 
         // Use default shader

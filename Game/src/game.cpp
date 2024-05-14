@@ -32,15 +32,17 @@ public:
 		scene.push_back(plane);
 
 		// Create soft body with cube model
-		softBody = new SoftBody(RESOURCES_PATH "3D/cube.obj", 0.9, 1.0, 0.1, 0.99);
+		// std::string path, float restitution, float mass, float stiffness, float damping
+		softBody = new SoftBody(RESOURCES_PATH "3D/cube.obj", 0.5, 1, .5, 0.1);
 		softBody->color = glm::vec3(0.0, 1.0, 0.0);
 		softBody->p = glm::vec3(0, 2.0, 0.0);
 		softBody->s = glm::vec3(0.5);
-		scene.push_back(softBody);
+		scene.push_back(softBody); 
 	}
 
 	// Update is called every frame
 	bool rPress = false;
+	bool spacePress = false;
 	void Update(float dt) 
 	{
 		// Additive time function
@@ -51,7 +53,7 @@ public:
 		light->p = glm::vec3(glm::cos(t/2) * 2.5, 1, glm::sin(t/2) * 2.5);
 		Renderer::camera->Position = glm::vec3(glm::cos(t/2) * 7.5, 5, glm::sin(t/2) * 7.5);
 
-		softBody->AddForce(glm::vec3(0.0, -9.81, 0.0));
+		softBody->AddForce(glm::vec3(0.0, -1, 0.0));
 		softBody->Update(dt);
 
 		if (keyPressed("r") && !rPress) {
@@ -59,6 +61,12 @@ public:
 			rPress = true;
 		}
 		if (keyReleased("r")) rPress = false;
+
+		if (keyPressed("space") && !rPress) {
+			softBody->AddForce(glm::vec3(0, 10, 0));
+			spacePress = true;
+		}
+		if (keyReleased("space")) spacePress = false;
 	}
 
 	// Exit is called before the game closes
