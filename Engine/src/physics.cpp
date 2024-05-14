@@ -146,6 +146,18 @@ void PointMass::Integrate(float dt) {
 		velocity = glm::vec4(velocity.x, -velocity.y * restitution, velocity.z, 1);
 		vert->position.y = (inverse * glm::vec4(0, 0.1, 0, 1)).y;
 	} 
+	if (world.x <= -10) {
+		velocity = glm::vec4(-velocity.x * restitution, velocity.y, velocity.z, 1);
+		vert->position.x = (inverse * glm::vec4(-10, 0, 0, 1)).x;
+	} 
+	if (world.z >= 10) {
+		velocity = glm::vec4(velocity.x, velocity.y, -velocity.z * restitution, 1);
+		vert->position.z = (inverse * glm::vec4(0, 0, 10, 1)).z;
+	}
+	if (world.z <= -10) {
+		velocity = glm::vec4(-velocity.x, velocity.y, -velocity.z * restitution, 1);
+		vert->position.z = (inverse * glm::vec4(0, 0, -10, 1)).z;
+	}
 
 	acceleration = forces / mass;
 	velocity += acceleration * dt;

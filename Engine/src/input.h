@@ -14,6 +14,7 @@ std::map<std::string, int> keys = {
 	{"s", GLFW_KEY_S},
 	{"d", GLFW_KEY_D},
 	{"r", GLFW_KEY_R},
+	{"t", GLFW_KEY_T},
 	{"up", GLFW_KEY_UP},
 	{"down", GLFW_KEY_DOWN},
 	{"left", GLFW_KEY_LEFT},

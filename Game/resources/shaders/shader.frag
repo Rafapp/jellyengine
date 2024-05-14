@@ -10,7 +10,7 @@ uniform bool calculateLighting = true;
 in vec3 Normal;
 in vec3 FragPos;
 
-float scatter = 1.5;
+float scatter = 2.5;
 float specularStrength = .125;
 float power = 128;
 
