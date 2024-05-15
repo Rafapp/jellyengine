@@ -105,3 +105,7 @@
 
 ### Acknowledgements
 This project could not have been accomplished without the support and guidance of our project advisor, Professor Kevin Smith, the counsel from Spartak Gevorgyan, and the encouragement and support from our family, friends, and peers in the Software Engineering Program at San Jose State University.
+
+### Research poster
+![U24 Poster pptx](https://github.com/Rafapp/jellyengine/assets/38381290/8f4fcbc9-51a2-4f19-9a26-4f4e37fde240)
+
