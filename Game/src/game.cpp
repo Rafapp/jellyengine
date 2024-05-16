@@ -140,7 +140,7 @@ public:
 			} 
 			// Acrobat
 			else if (object == 4) {
-				softBody = new SoftBody(objectPaths[object], 0.0, .25, 3, 0.1);
+				softBody = new SoftBody(objectPaths[object], 0.0, .5, 2.5, 0.1);
 				softBody->color = glm::vec3(1, 0.75, 0.0);
 				softBody->p = glm::vec3(0, 2.0, 0.0);
 				softBody->s = glm::vec3(0.3);
