@@ -1,5 +1,5 @@
 <div align = "center">
-  <img src = https://github.com/Rafapp/jellyengine/assets/38381290/d404dcfb-dd45-4afa-8a9f-42b7b3083d17 width = "750px" align = "center">
+  <img src = https://github.com/Rafapp/jellyengine/assets/38381290/d404dcfb-dd45-4afa-8a9f-42b7b3083d17 width = "650px" align = "center">
   <h1>Jelly Engine: A 3D Game Engine specialized for Soft Body Physics</h1>
 </div>
 <h2>Motivation</h2>
