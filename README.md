@@ -16,7 +16,7 @@
     </div>
 </div>
 <br>
-<p>Soft bodies are all around us in the physical world. Ubiquitous materials such as human skin, rubber balls or even jelly behave in complex ways, which are typically hard to simulate and even more so at runtime while maintaining good performance in current hardware. Applications of this technology could be, but not limited to:</p>
+<p>Soft bodies are all around us in the physical world. Ubiquitous materials such as human skin, rubber balls or even jelly behave in complex ways, which are typically hard to simulate and even more so at runtime while maintaining good performance in current hardware. Applications of this technology could be, but are not limited to:</p>
 <ul>
   <li><b>Medicine</b>: Training environments for surgery practicioners with high fidelity models of human organs and anatomy.</li>
   <li><b>Engineering</b>: Simulation and analysis of deformable materials like polymers and lattice structures.</li>
