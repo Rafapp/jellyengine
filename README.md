@@ -84,7 +84,7 @@
 
 1. Install [CMake](https://cmake.org/download/).
 2. Add CMake to `PATH`.
-3. Write your own game code in [game/src/game.cpp](game/src/game.cpp) and [game/src/game.h](game/src/game.h).
+3. Write your own game code in [Game/src/game.cpp](Game/src/game.cpp) and [Game/src/game.h](Game/src/game.h).
    - Use the toybox demo provided as a template, delete the contents of its functions.
    - You can write your code using the `Start()`, `Update()`, and `Exit()` functions.
    - We recommend using the toybox demo provided to see how to work with a `light`, the `scene` vector, the 3D `Model` class, and the `SoftBody` class.
